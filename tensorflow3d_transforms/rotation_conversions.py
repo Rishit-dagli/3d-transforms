@@ -394,3 +394,26 @@ def random_quaternions(
     s = tf.reduce_sum(o * o, axis=1)
     o = o / _copysign(tf.math.sqrt(s), o[:, 0])[:, None]
     return o
+
+def random_rotations(
+    n: int, dtype: Optional[tf.dtypes.DType] = tf.float32,
+) -> tf.Tensor:
+    """
+    Generate random rotations as 3x3 rotation matrices.
+
+    Example:
+
+    .. code-block:: python
+
+        random_rotations(2)
+        # <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=...>
+
+    :param n: Number of rotation matrices to generate.
+    :type n: int
+    :param dtype: Data type of the returned tensor, defaults to tf.float32.
+    :type dtype: Optional[tf.dtype], optional
+    :return: Tensor of shape (n, 3, 3) representing rotation matrices.
+    :rtype: tf.Tensor
+    """
+    quaternions = random_quaternions(n, dtype=dtype)
+    return quaternion_to_matrix(quaternions)
