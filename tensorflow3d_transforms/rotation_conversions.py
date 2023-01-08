@@ -224,3 +224,125 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
     ]
 
     return tf.linalg.matmul(tf.linalg.matmul(matrices[0], matrices[1]), matrices[2])
+
+def _index_from_letter(letter: str) -> int:
+    """
+    Return the index of the axis corresponding to the letter.
+
+    :param letter: The letter corresponding to the axis. Must be one of 'X', 'Y', 'Z'.
+    :type letter: str
+    :return: The index of the axis.
+    :rtype: int
+    :raises ValueError: If the letter is not one of 'X', 'Y', 'Z'.
+    """
+    if letter == "X":
+        return 0
+    if letter == "Y":
+        return 1
+    if letter == "Z":
+        return 2
+    raise ValueError("letter must be either X, Y or Z.")
+
+def _angle_from_tan(
+    axis: str, other_axis: str, data: tf.Tensor, horizontal: bool, tait_bryan: bool
+) -> tf.Tensor:
+    """
+    Extract the first or third Euler angle from the two members of the matrix which are positive constant times its sine and cosine.
+
+    :param axis: Axis label "X" or "Y or "Z" for the angle we are finding.
+    :type axis: str
+    :param other_axis: Axis label "X" or "Y or "Z" for the middle axis in the convention.
+    :type other_axis: str
+    :param data: Rotation matrices as tensor of shape (..., 3, 3).
+    :type data: tf.Tensor
+    :param horizontal: Whether we are looking for the angle for the third axis, which means the relevant entries are in the same row of the rotation matrix. If not, they are in the same column.
+    :type horizontal: bool
+    :param tait_bryan: Whether the first and third axes in the convention differ.
+    :type tait_bryan: bool
+    :return: Euler Angles in radians for each matrix in data as a tensor of shape (...).
+    :rtype: tf.Tensor
+    """
+
+    i1, i2 = {"X": (2, 1), "Y": (0, 2), "Z": (1, 0)}[axis]
+    if horizontal:
+        i2, i1 = i1, i2
+    even = (axis + other_axis) in ["XY", "YZ", "ZX"]
+    if horizontal == even:
+        return tf.math.atan2(data[..., i1], data[..., i2])
+    if tait_bryan:
+        return tf.math.atan2(-data[..., i2], data[..., i1])
+    return tf.math.atan2(data[..., i2], -data[..., i1])
+
+def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
+    """
+    Convert rotation matrices to euler angles in radians.
+
+    Example:
+
+    .. code-block:: python
+
+        matrix = tf.constant(
+            [
+                [
+                    [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+                    [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+                    [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+                ]
+            ]
+        )
+        matrix_to_euler_angles(matrix=matrix, convention="XYZ")
+        # <tf.Tensor: shape=(1, 3, 3), dtype=float32, numpy=
+        # array([[[-0.,  0., -0.],
+        #         [-0.,  0., -0.],
+        #         [-0.,  0., -0.]]], dtype=float32)>
+
+    :param matrix: A tensor of shape (..., 3, 3) representing rotation matrices.
+    :type matrix: tf.Tensor
+    :param convention: The euler angle convention. A string containing a combination of three uppercase letters from {"X", "Y", and "Z"}.
+    :type convention: str
+    :return: A tensor of shape (..., 3) representing euler angles.
+    :rtype: tf.Tensor
+    :raises ValueError: If the shape of the input matrix is invalid that is does not have the shape (..., 3, 3).
+    :raises ValueError: If the convention string is invalid that is does not have the length 3.
+    :raises ValueError: If the second character of the convention string is the same as the first or third.
+    :raises ValueError: If the convention string contains characters other than {"X", "Y", and "Z"}.
+    """
+    if len(convention) != 3:
+        raise ValueError(
+            f"Invalid euler angle convention {convention}, should be a string of length 3."
+        )
+    if convention[1] in (convention[0], convention[2]):
+        raise ValueError(
+            f"Invalid euler angle convention {convention}, second character should be different from first and third."
+        )
+    if matrix.shape[-2:] != (3, 3):
+        raise ValueError(
+            f"Invalid matrix shape {matrix.shape}, last two dimensions should be 3, 3."
+        )
+    for letter in convention:
+        if letter not in ("X", "Y", "Z"):
+            raise ValueError(f"Invalid letter {letter} in convention string.")
+    
+    i0 = _index_from_letter(convention[0])
+    i2 = _index_from_letter(convention[2])
+    tait_bryan = i0 != i2
+
+    if tait_bryan:
+        if i0 - i2 in [-1, 2]
+            central_angle = tf.math.asin(-1 * matrix[..., i0, i2])
+        else:
+            central_angle = tf.math.asin(matrix[..., i0, i2])
+    else:
+        central_angle = tf.math.acos(matrix[..., i0, i0])
+    
+    o = (
+        _angle_from_tan(
+            convention[0], convention[1], matrix[..., i2], False, tait_bryan
+        ),
+        central_angle,
+        _angle_from_tan(
+            convention[2], convention[1], matrix[..., i0, :], True, tait_bryan
+        ),
+    )
+    return tf.stack(o, axis=-1)
+         
