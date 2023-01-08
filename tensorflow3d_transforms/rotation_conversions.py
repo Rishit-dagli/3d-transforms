@@ -41,6 +41,7 @@ def quaternion_to_matrix(quaternions: tf.Tensor) -> tf.Tensor:
     )
     return tf.reshape(o, quaternions.shape[:-1] + (3, 3))
 
+
 def matrix_to_quaternion(matrix: tf.Tensor) -> tf.Tensor:
     """
     Convert rotations given as rotation matrices to quaternions.
@@ -75,17 +76,21 @@ def matrix_to_quaternion(matrix: tf.Tensor) -> tf.Tensor:
         raise ValueError(f"Invalid rotation matrix shape {matrix.shape}.")
 
     batch_dim = matrix.shape[:-2]
-    m00, m01, m02, m10, m11, m12, m20, m21, m22 = tf.unstack(tf.reshape(matrix, batch_dim + (9,)), axis=-1)
+    m00, m01, m02, m10, m11, m12, m20, m21, m22 = tf.unstack(
+        tf.reshape(matrix, batch_dim + (9,)), axis=-1
+    )
 
-    q_abs = _sqrt_positive_part(tf.stack(
-    [
-        1.0 + m00 + m11 + m22,
-        1.0 + m00 - m11 - m22,
-        1.0 - m00 + m11 - m22,
-        1.0 - m00 - m11 + m22,
-    ],
-    axis=-1,
-    ))
+    q_abs = _sqrt_positive_part(
+        tf.stack(
+            [
+                1.0 + m00 + m11 + m22,
+                1.0 + m00 - m11 - m22,
+                1.0 - m00 + m11 - m22,
+                1.0 - m00 - m11 + m22,
+            ],
+            axis=-1,
+        )
+    )
 
     quat_by_rijk = tf.stack(
         [
@@ -98,11 +103,14 @@ def matrix_to_quaternion(matrix: tf.Tensor) -> tf.Tensor:
     )
 
     flr = tf.convert_to_tensor(0, dtype=tf.int32)
-    quat_candidates = quat_by_rijk / (2.0 * tf.reduce_max(q_abs[..., None], flr, keepdims=True))
+    quat_candidates = quat_by_rijk / (
+        2.0 * tf.reduce_max(q_abs[..., None], flr, keepdims=True)
+    )
     max_indices = tf.argmax(q_abs, axis=-1)
     one_hot = tf.one_hot(max_indices, depth=4)
     selected = tf.boolean_mask(quat_candidates, one_hot > 0.5)
     return tf.reshape(selected, batch_dim + [4])
+
 
 def _sqrt_positive_part(x: tf.Tensor) -> tf.Tensor:
     """
@@ -117,6 +125,7 @@ def _sqrt_positive_part(x: tf.Tensor) -> tf.Tensor:
     positive_mask = x > 0
     ret = tf.where(positive_mask, tf.math.sqrt(x), ret)
     return ret
+
 
 def _axis_angle_rotation(axis: str, angle: tf.Tensor) -> tf.Tensor:
     """
@@ -133,7 +142,7 @@ def _axis_angle_rotation(axis: str, angle: tf.Tensor) -> tf.Tensor:
     """
     if axis not in ("X", "Y", "Z"):
         raise ValueError("letter must be either X, Y or Z.")
-    
+
     cos = tf.math.cos(angle)
     sin = tf.math.sin(angle)
     one = tf.ones_like(angle)
@@ -145,8 +154,9 @@ def _axis_angle_rotation(axis: str, angle: tf.Tensor) -> tf.Tensor:
         R_flat = (cos, zero, sin, zero, one, zero, -sin, zero, cos)
     elif axis == "Z":
         R_flat = (cos, -sin, zero, sin, cos, zero, zero, zero, one)
-    
+
     return tf.reshape(tf.stack(R_flat, axis=-1), angle.shape + (3, 3))
+
 
 def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tensor:
     """
@@ -171,15 +181,15 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
         # array([[[[1., 0., 0.],
         #          [0., 1., 0.],
         #          [0., 0., 1.]],
-        #  
+        #
         #         [[1., 0., 0.],
         #          [0., 1., 0.],
         #          [0., 0., 1.]],
-        # 
+        #
         #         [[1., 0., 0.],
         #          [0., 1., 0.],
         #          [0., 0., 1.]]]], dtype=float32)>
-    
+
     :param euler_angles: A tensor of shape (..., 3) representing euler angles.
     :type euler_angles: tf.Tensor
     :param convention: The euler angle convention. A string containing a combination of three uppercase letters from {"X", "Y", and "Z"}.
@@ -193,15 +203,21 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
     """
 
     if euler_angles.shape[-1] != 3:
-        raise ValueError(f"Invalid euler angle shape {euler_angles.shape}, last dimension should be 3.")
+        raise ValueError(
+            f"Invalid euler angle shape {euler_angles.shape}, last dimension should be 3."
+        )
     if len(convention) != 3:
-        raise ValueError(f"Invalid euler angle convention {convention}, should be a string of length 3.")
+        raise ValueError(
+            f"Invalid euler angle convention {convention}, should be a string of length 3."
+        )
     if convention[1] in (convention[0], convention[2]):
-        raise ValueError(f"Invalid euler angle convention {convention}, second character should be different from first and third.")
+        raise ValueError(
+            f"Invalid euler angle convention {convention}, second character should be different from first and third."
+        )
     for letter in convention:
         if letter not in ("X", "Y", "Z"):
             raise ValueError(f"Invalid letter {letter} in convention string.")
-    
+
     matrices = [
         _axis_angle_rotation(c, e)
         for c, e in zip(convention, tf.unstack(euler_angles, axis=-1))
