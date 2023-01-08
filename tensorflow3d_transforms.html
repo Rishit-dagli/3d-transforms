@@ -106,6 +106,43 @@
 <div class="section" id="module-tensorflow3d_transforms.rotation_conversions">
 <span id="tensorflow3d-transforms-rotation-conversions-module"></span><h2>tensorflow3d_transforms.rotation_conversions module<a class="headerlink" href="#module-tensorflow3d_transforms.rotation_conversions" title="Permalink to this headline"></a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.matrix_to_quaternion">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">matrix_to_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#matrix_to_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.matrix_to_quaternion" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as rotation matrices to quaternions.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="p">[</span><span class="mf">0.15885946</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.56794965</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.48926896</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">1.0064808</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.39120296</span><span class="p">,</span> <span class="mf">1.6047943</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.05503756</span><span class="p">,</span> <span class="mf">0.817741</span><span class="p">,</span> <span class="mf">0.4543775</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">matrix_to_quaternion</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(1, 4), dtype=float32, numpy=</span>
+<span class="c1"># array([[-0.1688297 , -0.16717434,  0.9326495 ,  0.6493691 ]],</span>
+<span class="c1"># dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor of shape (…, 4) representing quaternions with real part first.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is does not have the shape (…, 3, 3).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.quaternion_to_matrix">
 <span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">quaternion_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.quaternion_to_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>Convert rotations given as quaternions to rotation matrices.</p>
