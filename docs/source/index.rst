@@ -31,7 +31,7 @@ Quick Links
    :maxdepth: 2
    :caption: Contents:
 
-   modules
+   tensorflow3d_transforms
 
 Indices and tables
 ==================
