@@ -491,6 +491,25 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">quaternions</span> <span class="o">=</span> <span class="n">random_quaternions</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">quaternion_to_matrix</span><span class="p">(</span><span class="n">quaternions</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="standardize_quaternion"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.standardize_quaternion">[docs]</a><span class="k">def</span> <span class="nf">standardize_quaternion</span><span class="p">(</span><span class="n">quaternions</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a unit quaternion to a standard form: one in which the real part is non negative.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        quaternions = tf.constant((-1.,-2.,-1.,-1.))</span>
+<span class="sd">        standardize_quaternion(quaternions=quaternions)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1.,  2.,  1.,  1.], dtype=float32)&gt;</span>
+
+<span class="sd">    :param quaternions: Quaternions with real part first, as tensor of shape (..., 4).</span>
+<span class="sd">    :type quaternions: tf.Tensor</span>
+<span class="sd">    :return: Standardized quaternions as tensor of shape (..., 4).</span>
+<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">quaternions</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">quaternions</span><span class="p">,</span> <span class="n">quaternions</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

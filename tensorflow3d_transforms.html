@@ -317,6 +317,29 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.standardize_quaternion">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">standardize_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#standardize_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.standardize_quaternion" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a unit quaternion to a standard form: one in which the real part is non negative.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quaternions</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">standardize_quaternion</span><span class="p">(</span><span class="n">quaternions</span><span class="o">=</span><span class="n">quaternions</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1.,  2.,  1.,  1.], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – Quaternions with real part first, as tensor of shape (…, 4).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Standardized quaternions as tensor of shape (…, 4).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tensorflow3d_transforms">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tensorflow3d_transforms" title="Permalink to this headline"></a></h2>
