@@ -518,7 +518,7 @@ def quaternion_invert(quaternion: tf.Tensor) -> tf.Tensor:
     Example:
 
     .. code-block:: python
-    
+
         quaternion = tf.constant((1.,2.,3.,4.))
         quaternion_invert(quaternion=quaternion)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1., -2., -3., -4.], dtype=float32)>
@@ -530,3 +530,35 @@ def quaternion_invert(quaternion: tf.Tensor) -> tf.Tensor:
     """
     scaling = tf.cast(tf.constant([1, -1, -1, -1]), dtype=quaternion.dtype)
     return quaternion * scaling
+
+def quaternion_apply(quaternion: tf.Tensor, point: tf.Tensor) -> tf.Tensor:
+    """
+    Apply the rotation given by a quaternion to a 3D point.
+
+    Example:
+
+    .. code-block:: python
+
+        quaternion = tf.constant((1.,1.,1.,4.))
+        point = tf.constant((1.,1.,1.))
+        quaternion_apply(quaternion=quaternion, point=point)
+        # <tf.Tensor: shape=(3,), dtype=float32, numpy=array([-11.,   1.,  31.], dtype=float32)>
+
+    :param quaternion: Quaternions as tensor of shape (..., 4), with real part first
+    :type quaternion: tf.Tensor
+    :param point: Points as tensor of shape (..., 3)
+    :type point: tf.Tensor
+    :return: Tensor of rotated points of shape (..., 3).
+    :rtype: tf.Tensor
+    :raises ValueError: If the last dimension of point is not 3.
+    """
+    if point.shape[-1] != 3:
+        raise ValueError("Points must be 3D")
+    
+    real_parts = tf.zeros(tf.shape(point)[:-1] + (1,))
+    point_as_quaternion = tf.concat([real_parts, point], axis=-1)
+    out = quaternion_raw_multiply(
+        quaternion_raw_multiply(quaternion, point_as_quaternion),
+        quaternion_invert(quaternion),
+    )
+    return out[..., 1:]
