@@ -467,3 +467,25 @@ def quaternion_raw_multiply(a: tf.Tensor, b:tf.Tensor) -> tf.Tensor:
     oy = aw * by - ax * bz + ay * bw + az * bx
     oz = aw * bz + ax * by - ay * bx + az * bw
     return tf.stack([ow, ox, oy, oz], axis=-1)
+
+def quaternion_multiply(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
+    """
+    Multiply two quaternions representing rotations, returning the quaternion representing their composition, i.e. the versor with nonnegative real part.
+    
+    Example:
+
+    .. code-block:: python
+
+        a = tf.constant((1.,2.,3.,4.))
+        b = tf.constant((5.,6.,7.,8.))
+        quaternion_multiply(a=a, b=b)
+        # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 60., -12., -30., -24.], dtype=float32)>
+        
+    :param a: First quaternion with real part first, as tensor of shape (..., 4).
+    :type a: tf.Tensor
+    :param b: Second quaternion with real part first, as tensor of shape (..., 4).
+    :type b: tf.Tensor
+    :return: Product of a and b as tensor of shape (..., 4).
+    :rtype: tf.Tensor
+    """
+    return standardize_quaternion(quaternion_raw_multiply(a, b))
