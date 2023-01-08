@@ -14,6 +14,8 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath("../.."))
+for x in os.walk('../../tensorflow3d_transforms'):
+  sys.path.insert(0, x[0])
 
 # -- Project information -----------------------------------------------------
 

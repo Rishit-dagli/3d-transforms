@@ -1,9 +1,6 @@
 tensorflow3d\_transforms package
 ================================
 
-Submodules
-----------
-
 tensorflow3d\_transforms.rotation\_conversions module
 -----------------------------------------------------
 

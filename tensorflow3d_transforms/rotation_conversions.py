@@ -5,6 +5,7 @@ assume the points on which the transformation will be applied are column
 vectors that is the R matrix is structured as
 
 .. code-block:: python
+
     R = [
             [Rxx, Rxy, Rxz],
             [Ryx, Ryy, Ryz],
@@ -517,6 +518,7 @@ def quaternion_invert(quaternion: tf.Tensor) -> tf.Tensor:
     Example:
 
     .. code-block:: python
+    
         quaternion = tf.constant((1.,2.,3.,4.))
         quaternion_invert(quaternion=quaternion)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1., -2., -3., -4.], dtype=float32)>
