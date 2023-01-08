@@ -176,7 +176,7 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
             ]
         )
 
-        euler_angles_to_matrix(euler_angles, convention="XYZ")
+        euler_angles_to_matrix(euler_angles=euler_angles, convention="XYZ")
         # <tf.Tensor: shape=(1, 3, 3, 3), dtype=float32, numpy=
         # array([[[[1., 0., 0.],
         #          [0., 1., 0.],
