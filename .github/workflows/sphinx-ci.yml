@@ -21,7 +21,7 @@ jobs:
     
     - name: Commit documentation changes
       run: |
-        git clone https://github.com/Rishit-dagli/3d-transforms.git --branch gh-pages --single-branch gh-pages
+        git clone https://${{ secrets.PAT }}@github.com/Rishit-dagli/3d-transforms.git --branch gh-pages --single-branch gh-pages
         cp -r docs/build/html/* gh-pages/
         cd gh-pages
         touch .nojekyll
