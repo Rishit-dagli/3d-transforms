@@ -1,3 +1,5 @@
+from typing import Optional
+
 import tensorflow as tf
 
 
@@ -225,6 +227,7 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
 
     return tf.linalg.matmul(tf.linalg.matmul(matrices[0], matrices[1]), matrices[2])
 
+
 def _index_from_letter(letter: str) -> int:
     """
     Return the index of the axis corresponding to the letter.
@@ -242,6 +245,7 @@ def _index_from_letter(letter: str) -> int:
     if letter == "Z":
         return 2
     raise ValueError("letter must be either X, Y or Z.")
+
 
 def _angle_from_tan(
     axis: str, other_axis: str, data: tf.Tensor, horizontal: bool, tait_bryan: bool
@@ -272,6 +276,7 @@ def _angle_from_tan(
     if tait_bryan:
         return tf.math.atan2(-data[..., i2], data[..., i1])
     return tf.math.atan2(data[..., i2], -data[..., i1])
+
 
 def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
     """
@@ -322,19 +327,19 @@ def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
     for letter in convention:
         if letter not in ("X", "Y", "Z"):
             raise ValueError(f"Invalid letter {letter} in convention string.")
-    
+
     i0 = _index_from_letter(convention[0])
     i2 = _index_from_letter(convention[2])
     tait_bryan = i0 != i2
 
     if tait_bryan:
-        if i0 - i2 in [-1, 2]
+        if i0 - i2 in [-1, 2]:
             central_angle = tf.math.asin(-1 * matrix[..., i0, i2])
         else:
             central_angle = tf.math.asin(matrix[..., i0, i2])
     else:
         central_angle = tf.math.acos(matrix[..., i0, i0])
-    
+
     o = (
         _angle_from_tan(
             convention[0], convention[1], matrix[..., i2], False, tait_bryan
@@ -345,4 +350,3 @@ def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
         ),
     )
     return tf.stack(o, axis=-1)
-         
