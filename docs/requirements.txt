@@ -1,0 +1,6 @@
+Sphinx==4.2.0
+tensorflow
+sphinx-rtd-theme
+sphinx-rtd-dark-mode
+sphinxemoji
+nbsphinx
