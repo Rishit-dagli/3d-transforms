@@ -1,11 +1,26 @@
+"""This module contains functions to convert between rotation representations.
+
+The transformation matrices returned from the functions in this file
+assume the points on which the transformation will be applied are column
+vectors that is the R matrix is structured as
+
+.. code-block:: python
+    R = [
+            [Rxx, Rxy, Rxz],
+            [Ryx, Ryy, Ryz],
+            [Rzx, Rzy, Rzz],
+        ]  # (3, 3)
+
+Furthermore, we will assume for any functions in this module that these are quaternions with real part first that is a tensor of shape (..., 4).
+"""
+
 from typing import Optional
 
 import tensorflow as tf
 
 
 def quaternion_to_matrix(quaternions: tf.Tensor) -> tf.Tensor:
-    """
-    Convert rotations given as quaternions to rotation matrices.
+    """Convert rotations given as quaternions to rotation matrices.
 
     Example:
 
@@ -45,8 +60,7 @@ def quaternion_to_matrix(quaternions: tf.Tensor) -> tf.Tensor:
 
 
 def matrix_to_quaternion(matrix: tf.Tensor) -> tf.Tensor:
-    """
-    Convert rotations given as rotation matrices to quaternions.
+    """Convert rotations given as rotation matrices to quaternions.
 
     Example:
 
@@ -115,8 +129,7 @@ def matrix_to_quaternion(matrix: tf.Tensor) -> tf.Tensor:
 
 
 def _sqrt_positive_part(x: tf.Tensor) -> tf.Tensor:
-    """
-    Returns the square root of all positive elements of x and 0 for others.
+    """Returns the square root of all positive elements of x and 0 for others.
 
     :param x: A tensor
     :type x: tf.Tensor
@@ -130,9 +143,8 @@ def _sqrt_positive_part(x: tf.Tensor) -> tf.Tensor:
 
 
 def _axis_angle_rotation(axis: str, angle: tf.Tensor) -> tf.Tensor:
-    """
-    Return the rotation matrices for one of the rotations about an axis
-    of which Euler angles describe, for each value of the angle given.
+    """Return the rotation matrices for one of the rotations about an axis of
+    which Euler angles describe, for each value of the angle given.
 
     :param axis: The axis about which the rotation is performed. Must be one of 'X', 'Y', 'Z'.
     :type axis: str
@@ -161,8 +173,7 @@ def _axis_angle_rotation(axis: str, angle: tf.Tensor) -> tf.Tensor:
 
 
 def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tensor:
-    """
-    Convert rotations given as euler angles to rotation matrices.
+    """Convert rotations given as euler angles to rotation matrices.
 
     Example:
 
@@ -206,15 +217,18 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
 
     if euler_angles.shape[-1] != 3:
         raise ValueError(
-            f"Invalid euler angle shape {euler_angles.shape}, last dimension should be 3."
+            f"Invalid euler angle shape {euler_angles.shape}, last dimension should"
+            " be 3."
         )
     if len(convention) != 3:
         raise ValueError(
-            f"Invalid euler angle convention {convention}, should be a string of length 3."
+            f"Invalid euler angle convention {convention}, should be a string of"
+            " length 3."
         )
     if convention[1] in (convention[0], convention[2]):
         raise ValueError(
-            f"Invalid euler angle convention {convention}, second character should be different from first and third."
+            f"Invalid euler angle convention {convention}, second character should be"
+            " different from first and third."
         )
     for letter in convention:
         if letter not in ("X", "Y", "Z"):
@@ -229,8 +243,7 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
 
 
 def _index_from_letter(letter: str) -> int:
-    """
-    Return the index of the axis corresponding to the letter.
+    """Return the index of the axis corresponding to the letter.
 
     :param letter: The letter corresponding to the axis. Must be one of 'X', 'Y', 'Z'.
     :type letter: str
@@ -250,8 +263,8 @@ def _index_from_letter(letter: str) -> int:
 def _angle_from_tan(
     axis: str, other_axis: str, data: tf.Tensor, horizontal: bool, tait_bryan: bool
 ) -> tf.Tensor:
-    """
-    Extract the first or third Euler angle from the two members of the matrix which are positive constant times its sine and cosine.
+    """Extract the first or third Euler angle from the two members of the
+    matrix which are positive constant times its sine and cosine.
 
     :param axis: Axis label "X" or "Y or "Z" for the angle we are finding.
     :type axis: str
@@ -279,8 +292,7 @@ def _angle_from_tan(
 
 
 def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
-    """
-    Convert rotation matrices to euler angles in radians.
+    """Convert rotation matrices to euler angles in radians.
 
     Example:
 
@@ -314,11 +326,13 @@ def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
     """
     if len(convention) != 3:
         raise ValueError(
-            f"Invalid euler angle convention {convention}, should be a string of length 3."
+            f"Invalid euler angle convention {convention}, should be a string of"
+            " length 3."
         )
     if convention[1] in (convention[0], convention[2]):
         raise ValueError(
-            f"Invalid euler angle convention {convention}, second character should be different from first and third."
+            f"Invalid euler angle convention {convention}, second character should be"
+            " different from first and third."
         )
     if matrix.shape[-2:] != (3, 3):
         raise ValueError(
@@ -353,8 +367,10 @@ def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
 
 
 def _copysign(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
-    """
-    Return a tensor where each element has the absolute value taken from the, corresponding element of a, with sign taken from the corresponding element of b. This is like the standard copysign floating-point operation, but is not careful about negative 0 and NaN.
+    """Return a tensor where each element has the absolute value taken from
+    the, corresponding element of a, with sign taken from the corresponding
+    element of b. This is like the standard copysign floating-point operation,
+    but is not careful about negative 0 and NaN.
 
     :param a: Source tensor.
     :type a: tf.Tensor
@@ -374,8 +390,8 @@ def random_quaternions(
     n: int,
     dtype: Optional[tf.dtypes.DType] = tf.float32,
 ) -> tf.Tensor:
-    """
-    Generate random quaternions representing rotations, i.e. versors with nonnegative real part.
+    """Generate random quaternions representing rotations, i.e. versors with
+    nonnegative real part.
 
     Example:
 
@@ -401,8 +417,7 @@ def random_rotations(
     n: int,
     dtype: Optional[tf.dtypes.DType] = tf.float32,
 ) -> tf.Tensor:
-    """
-    Generate random rotations as 3x3 rotation matrices.
+    """Generate random rotations as 3x3 rotation matrices.
 
     Example:
 
@@ -421,9 +436,10 @@ def random_rotations(
     quaternions = random_quaternions(n, dtype=dtype)
     return quaternion_to_matrix(quaternions)
 
+
 def standardize_quaternion(quaternions: tf.Tensor) -> tf.Tensor:
-    """
-    Convert a unit quaternion to a standard form: one in which the real part is non negative.
+    """Convert a unit quaternion to a standard form: one in which the real part
+    is non negative.
 
     Example:
 
@@ -440,9 +456,9 @@ def standardize_quaternion(quaternions: tf.Tensor) -> tf.Tensor:
     """
     return tf.where(quaternions[..., 0:1] < 0, -quaternions, quaternions)
 
-def quaternion_raw_multiply(a: tf.Tensor, b:tf.Tensor) -> tf.Tensor:
-    """
-    Multiply two quaternions.
+
+def quaternion_raw_multiply(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
+    """Multiply two quaternions.
 
     Example:
 
@@ -452,7 +468,7 @@ def quaternion_raw_multiply(a: tf.Tensor, b:tf.Tensor) -> tf.Tensor:
         b = tf.constant((5.,6.,7.,8.))
         quaternion_raw_multiply(a=a, b=b)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([-60.,  12.,  30.,  24.], dtype=float32)>
-    
+
     :param a: First quaternion with real part first, as tensor of shape (..., 4).
     :type a: tf.Tensor
     :param b: Second quaternion with real part first, as tensor of shape (..., 4).
@@ -468,10 +484,12 @@ def quaternion_raw_multiply(a: tf.Tensor, b:tf.Tensor) -> tf.Tensor:
     oz = aw * bz + ax * by - ay * bx + az * bw
     return tf.stack([ow, ox, oy, oz], axis=-1)
 
+
 def quaternion_multiply(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
-    """
-    Multiply two quaternions representing rotations, returning the quaternion representing their composition, i.e. the versor with nonnegative real part.
-    
+    """Multiply two quaternions representing rotations, returning the
+    quaternion representing their composition, i.e. the versor with nonnegative
+    real part.
+
     Example:
 
     .. code-block:: python
@@ -480,7 +498,7 @@ def quaternion_multiply(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
         b = tf.constant((5.,6.,7.,8.))
         quaternion_multiply(a=a, b=b)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 60., -12., -30., -24.], dtype=float32)>
-        
+
     :param a: First quaternion with real part first, as tensor of shape (..., 4).
     :type a: tf.Tensor
     :param b: Second quaternion with real part first, as tensor of shape (..., 4).
