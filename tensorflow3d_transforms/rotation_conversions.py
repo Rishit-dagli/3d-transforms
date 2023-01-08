@@ -351,6 +351,7 @@ def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
     )
     return tf.stack(o, axis=-1)
 
+
 def _copysign(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
     """
     Return a tensor where each element has the absolute value taken from the, corresponding element of a, with sign taken from the corresponding element of b. This is like the standard copysign floating-point operation, but is not careful about negative 0 and NaN.
@@ -364,14 +365,14 @@ def _copysign(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
     :raises ValueError: If the shapes of a and b do not match.
     """
     if a.shape != b.shape:
-        raise ValueError(
-            f"Shapes of a and b do not match: {a.shape} and {b.shape}."
-        )
+        raise ValueError(f"Shapes of a and b do not match: {a.shape} and {b.shape}.")
     signs_differ = (a < 0) != (b < 0)
     return tf.where(signs_differ, -a, a)
 
+
 def random_quaternions(
-    n: int, dtype: Optional[tf.dtypes.DType] = tf.float32,
+    n: int,
+    dtype: Optional[tf.dtypes.DType] = tf.float32,
 ) -> tf.Tensor:
     """
     Generate random quaternions representing rotations, i.e. versors with nonnegative real part.
@@ -395,8 +396,10 @@ def random_quaternions(
     o = o / _copysign(tf.math.sqrt(s), o[:, 0])[:, None]
     return o
 
+
 def random_rotations(
-    n: int, dtype: Optional[tf.dtypes.DType] = tf.float32,
+    n: int,
+    dtype: Optional[tf.dtypes.DType] = tf.float32,
 ) -> tf.Tensor:
     """
     Generate random rotations as 3x3 rotation matrices.
