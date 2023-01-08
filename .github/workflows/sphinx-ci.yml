@@ -51,13 +51,9 @@ jobs:
             texlive-fonts-recommended imagemagick
           build-command: make latexpdf
           docs-folder: docs/
-      - uses: actions/upload-artifact@v2
-        if: contains(github.event.head_commit.message, 'save artifact')
-        with:
-          name: DocumentationHTML
-          path: docs/build/html/
-      - uses: actions/upload-artifact@v2
-        if: contains(github.event.head_commit.message, 'save artifact')
-        with:
-          name: Documentation
-          path: docs/build/latex/tensorflow3d-transforms.pdf
+      # Save artifacts only for releases
+      # - uses: actions/upload-artifact@v2
+      #   if: contains(github.event.head_commit.message, 'save artifact')
+      #   with:
+      #     name: Documentation
+      #     path: docs/build/latex/tensorflow3d-transforms.pdf
