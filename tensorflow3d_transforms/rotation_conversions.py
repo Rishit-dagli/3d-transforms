@@ -420,3 +420,22 @@ def random_rotations(
     """
     quaternions = random_quaternions(n, dtype=dtype)
     return quaternion_to_matrix(quaternions)
+
+def standardize_quaternion(quaternions: tf.Tensor) -> tf.Tensor:
+    """
+    Convert a unit quaternion to a standard form: one in which the real part is non negative.
+
+    Example:
+
+    .. code-block:: python
+
+        quaternions = tf.constant((-1.,-2.,-1.,-1.))
+        standardize_quaternion(quaternions=quaternions)
+        # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1.,  2.,  1.,  1.], dtype=float32)>
+
+    :param quaternions: Quaternions with real part first, as tensor of shape (..., 4).
+    :type quaternions: tf.Tensor
+    :return: Standardized quaternions as tensor of shape (..., 4).
+    :rtype: tf.Tensor
+    """
+    return tf.where(quaternions[..., 0:1] < 0, -quaternions, quaternions)
