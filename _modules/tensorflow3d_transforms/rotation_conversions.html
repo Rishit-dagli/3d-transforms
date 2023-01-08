@@ -69,14 +69,29 @@
            <div itemprop="articleBody">
              
   <h1>Source code for tensorflow3d_transforms.rotation_conversions</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains functions to convert between rotation representations.</span>
+
+<span class="sd">The transformation matrices returned from the functions in this file</span>
+<span class="sd">assume the points on which the transformation will be applied are column</span>
+<span class="sd">vectors that is the R matrix is structured as</span>
+
+<span class="sd">.. code-block:: python</span>
+<span class="sd">    R = [</span>
+<span class="sd">            [Rxx, Rxy, Rxz],</span>
+<span class="sd">            [Ryx, Ryy, Ryz],</span>
+<span class="sd">            [Rzx, Rzy, Rzz],</span>
+<span class="sd">        ]  # (3, 3)</span>
+
+<span class="sd">Furthermore, we will assume for any functions in this module that these are quaternions with real part first that is a tensor of shape (..., 4).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
 
 <div class="viewcode-block" id="quaternion_to_matrix"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.quaternion_to_matrix">[docs]</a><span class="k">def</span> <span class="nf">quaternion_to_matrix</span><span class="p">(</span><span class="n">quaternions</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert rotations given as quaternions to rotation matrices.</span>
+    <span class="sd">&quot;&quot;&quot;Convert rotations given as quaternions to rotation matrices.</span>
 
 <span class="sd">    Example:</span>
 
@@ -116,8 +131,7 @@
 
 
 <div class="viewcode-block" id="matrix_to_quaternion"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.matrix_to_quaternion">[docs]</a><span class="k">def</span> <span class="nf">matrix_to_quaternion</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert rotations given as rotation matrices to quaternions.</span>
+    <span class="sd">&quot;&quot;&quot;Convert rotations given as rotation matrices to quaternions.</span>
 
 <span class="sd">    Example:</span>
 
@@ -186,8 +200,7 @@
 
 
 <span class="k">def</span> <span class="nf">_sqrt_positive_part</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the square root of all positive elements of x and 0 for others.</span>
+    <span class="sd">&quot;&quot;&quot;Returns the square root of all positive elements of x and 0 for others.</span>
 
 <span class="sd">    :param x: A tensor</span>
 <span class="sd">    :type x: tf.Tensor</span>
@@ -201,9 +214,8 @@
 
 
 <span class="k">def</span> <span class="nf">_axis_angle_rotation</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the rotation matrices for one of the rotations about an axis</span>
-<span class="sd">    of which Euler angles describe, for each value of the angle given.</span>
+    <span class="sd">&quot;&quot;&quot;Return the rotation matrices for one of the rotations about an axis of</span>
+<span class="sd">    which Euler angles describe, for each value of the angle given.</span>
 
 <span class="sd">    :param axis: The axis about which the rotation is performed. Must be one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
 <span class="sd">    :type axis: str</span>
@@ -232,8 +244,7 @@
 
 
 <div class="viewcode-block" id="euler_angles_to_matrix"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.euler_angles_to_matrix">[docs]</a><span class="k">def</span> <span class="nf">euler_angles_to_matrix</span><span class="p">(</span><span class="n">euler_angles</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">convention</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert rotations given as euler angles to rotation matrices.</span>
+    <span class="sd">&quot;&quot;&quot;Convert rotations given as euler angles to rotation matrices.</span>
 
 <span class="sd">    Example:</span>
 
@@ -277,15 +288,18 @@
 
     <span class="k">if</span> <span class="n">euler_angles</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle shape </span><span class="si">{euler_angles.shape}</span><span class="s2">, last dimension should be 3.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle shape </span><span class="si">{euler_angles.shape}</span><span class="s2">, last dimension should&quot;</span>
+            <span class="s2">&quot; be 3.&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">convention</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, should be a string of length 3.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, should be a string of&quot;</span>
+            <span class="s2">&quot; length 3.&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">convention</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="n">convention</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">convention</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, second character should be different from first and third.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, second character should be&quot;</span>
+            <span class="s2">&quot; different from first and third.&quot;</span>
         <span class="p">)</span>
     <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">convention</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">letter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">):</span>
@@ -300,8 +314,7 @@
 
 
 <span class="k">def</span> <span class="nf">_index_from_letter</span><span class="p">(</span><span class="n">letter</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the index of the axis corresponding to the letter.</span>
+    <span class="sd">&quot;&quot;&quot;Return the index of the axis corresponding to the letter.</span>
 
 <span class="sd">    :param letter: The letter corresponding to the axis. Must be one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
 <span class="sd">    :type letter: str</span>
@@ -321,8 +334,8 @@
 <span class="k">def</span> <span class="nf">_angle_from_tan</span><span class="p">(</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">other_axis</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">horizontal</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">tait_bryan</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extract the first or third Euler angle from the two members of the matrix which are positive constant times its sine and cosine.</span>
+    <span class="sd">&quot;&quot;&quot;Extract the first or third Euler angle from the two members of the</span>
+<span class="sd">    matrix which are positive constant times its sine and cosine.</span>
 
 <span class="sd">    :param axis: Axis label &quot;X&quot; or &quot;Y or &quot;Z&quot; for the angle we are finding.</span>
 <span class="sd">    :type axis: str</span>
@@ -350,8 +363,7 @@
 
 
 <div class="viewcode-block" id="matrix_to_euler_angles"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.matrix_to_euler_angles">[docs]</a><span class="k">def</span> <span class="nf">matrix_to_euler_angles</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">convention</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert rotation matrices to euler angles in radians.</span>
+    <span class="sd">&quot;&quot;&quot;Convert rotation matrices to euler angles in radians.</span>
 
 <span class="sd">    Example:</span>
 
@@ -385,11 +397,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">convention</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, should be a string of length 3.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, should be a string of&quot;</span>
+            <span class="s2">&quot; length 3.&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">convention</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="n">convention</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">convention</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, second character should be different from first and third.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, second character should be&quot;</span>
+            <span class="s2">&quot; different from first and third.&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -424,8 +438,10 @@
 
 
 <span class="k">def</span> <span class="nf">_copysign</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return a tensor where each element has the absolute value taken from the, corresponding element of a, with sign taken from the corresponding element of b. This is like the standard copysign floating-point operation, but is not careful about negative 0 and NaN.</span>
+    <span class="sd">&quot;&quot;&quot;Return a tensor where each element has the absolute value taken from</span>
+<span class="sd">    the, corresponding element of a, with sign taken from the corresponding</span>
+<span class="sd">    element of b. This is like the standard copysign floating-point operation,</span>
+<span class="sd">    but is not careful about negative 0 and NaN.</span>
 
 <span class="sd">    :param a: Source tensor.</span>
 <span class="sd">    :type a: tf.Tensor</span>
@@ -445,8 +461,8 @@
     <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">DType</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate random quaternions representing rotations, i.e. versors with nonnegative real part.</span>
+    <span class="sd">&quot;&quot;&quot;Generate random quaternions representing rotations, i.e. versors with</span>
+<span class="sd">    nonnegative real part.</span>
 
 <span class="sd">    Example:</span>
 
@@ -472,8 +488,7 @@
     <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">DType</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate random rotations as 3x3 rotation matrices.</span>
+    <span class="sd">&quot;&quot;&quot;Generate random rotations as 3x3 rotation matrices.</span>
 
 <span class="sd">    Example:</span>
 
@@ -492,9 +507,10 @@
     <span class="n">quaternions</span> <span class="o">=</span> <span class="n">random_quaternions</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">quaternion_to_matrix</span><span class="p">(</span><span class="n">quaternions</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="standardize_quaternion"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.standardize_quaternion">[docs]</a><span class="k">def</span> <span class="nf">standardize_quaternion</span><span class="p">(</span><span class="n">quaternions</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert a unit quaternion to a standard form: one in which the real part is non negative.</span>
+    <span class="sd">&quot;&quot;&quot;Convert a unit quaternion to a standard form: one in which the real part</span>
+<span class="sd">    is non negative.</span>
 
 <span class="sd">    Example:</span>
 
@@ -511,9 +527,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">quaternions</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">quaternions</span><span class="p">,</span> <span class="n">quaternions</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="quaternion_raw_multiply"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.quaternion_raw_multiply">[docs]</a><span class="k">def</span> <span class="nf">quaternion_raw_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Multiply two quaternions.</span>
+
+<div class="viewcode-block" id="quaternion_raw_multiply"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.quaternion_raw_multiply">[docs]</a><span class="k">def</span> <span class="nf">quaternion_raw_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Multiply two quaternions.</span>
 
 <span class="sd">    Example:</span>
 
@@ -523,7 +539,7 @@
 <span class="sd">        b = tf.constant((5.,6.,7.,8.))</span>
 <span class="sd">        quaternion_raw_multiply(a=a, b=b)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([-60.,  12.,  30.,  24.], dtype=float32)&gt;</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param a: First quaternion with real part first, as tensor of shape (..., 4).</span>
 <span class="sd">    :type a: tf.Tensor</span>
 <span class="sd">    :param b: Second quaternion with real part first, as tensor of shape (..., 4).</span>
@@ -539,10 +555,12 @@
     <span class="n">oz</span> <span class="o">=</span> <span class="n">aw</span> <span class="o">*</span> <span class="n">bz</span> <span class="o">+</span> <span class="n">ax</span> <span class="o">*</span> <span class="n">by</span> <span class="o">-</span> <span class="n">ay</span> <span class="o">*</span> <span class="n">bx</span> <span class="o">+</span> <span class="n">az</span> <span class="o">*</span> <span class="n">bw</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">ow</span><span class="p">,</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">oz</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="quaternion_multiply"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.quaternion_multiply">[docs]</a><span class="k">def</span> <span class="nf">quaternion_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Multiply two quaternions representing rotations, returning the quaternion representing their composition, i.e. the versor with nonnegative real part.</span>
-<span class="sd">    </span>
+    <span class="sd">&quot;&quot;&quot;Multiply two quaternions representing rotations, returning the</span>
+<span class="sd">    quaternion representing their composition, i.e. the versor with nonnegative</span>
+<span class="sd">    real part.</span>
+
 <span class="sd">    Example:</span>
 
 <span class="sd">    .. code-block:: python</span>
@@ -551,7 +569,7 @@
 <span class="sd">        b = tf.constant((5.,6.,7.,8.))</span>
 <span class="sd">        quaternion_multiply(a=a, b=b)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 60., -12., -30., -24.], dtype=float32)&gt;</span>
-<span class="sd">        </span>
+
 <span class="sd">    :param a: First quaternion with real part first, as tensor of shape (..., 4).</span>
 <span class="sd">    :type a: tf.Tensor</span>
 <span class="sd">    :param b: Second quaternion with real part first, as tensor of shape (..., 4).</span>
