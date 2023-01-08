@@ -579,6 +579,26 @@
 <span class="sd">    :rtype: tf.Tensor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">standardize_quaternion</span><span class="p">(</span><span class="n">quaternion_raw_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="quaternion_invert"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.quaternion_invert">[docs]</a><span class="k">def</span> <span class="nf">quaternion_invert</span><span class="p">(</span><span class="n">quaternion</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Given a quaternion representing rotation, get the quaternion</span>
+<span class="sd">    representing its inverse.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+<span class="sd">        quaternion = tf.constant((1.,2.,3.,4.))</span>
+<span class="sd">        quaternion_invert(quaternion=quaternion)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1., -2., -3., -4.], dtype=float32)&gt;</span>
+
+<span class="sd">    :param quaternion: Quaternions as tensor of shape (..., 4), with real part first, which must be versors (unit quaternions).</span>
+<span class="sd">    :type quaternion: tf.Tensor</span>
+<span class="sd">    :return: The inverse, a tensor of quaternions of shape (..., 4).</span>
+<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scaling</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">quaternion</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">quaternion</span> <span class="o">*</span> <span class="n">scaling</span></div>
 </pre></div>
 
            </div>

@@ -248,6 +248,25 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.quaternion_invert">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">quaternion_invert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternion</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_invert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.quaternion_invert" title="Permalink to this definition"></a></dt>
+<dd><p>Given a quaternion representing rotation, get the quaternion
+representing its inverse.</p>
+<p>Example:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4), with real part first, which must be versors (unit quaternions).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The inverse, a tensor of quaternions of shape (…, 4).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.quaternion_multiply">
 <span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">quaternion_multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_multiply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.quaternion_multiply" title="Permalink to this definition"></a></dt>
 <dd><p>Multiply two quaternions representing rotations, returning the
