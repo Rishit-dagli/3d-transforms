@@ -531,9 +531,9 @@ def quaternion_invert(quaternion: tf.Tensor) -> tf.Tensor:
     scaling = tf.cast(tf.constant([1, -1, -1, -1]), dtype=quaternion.dtype)
     return quaternion * scaling
 
+
 def quaternion_apply(quaternion: tf.Tensor, point: tf.Tensor) -> tf.Tensor:
-    """
-    Apply the rotation given by a quaternion to a 3D point.
+    """Apply the rotation given by a quaternion to a 3D point.
 
     Example:
 
@@ -554,7 +554,7 @@ def quaternion_apply(quaternion: tf.Tensor, point: tf.Tensor) -> tf.Tensor:
     """
     if point.shape[-1] != 3:
         raise ValueError("Points must be 3D")
-    
+
     real_parts = tf.zeros(tf.shape(point)[:-1] + (1,))
     point_as_quaternion = tf.concat([real_parts, point], axis=-1)
     out = quaternion_raw_multiply(
