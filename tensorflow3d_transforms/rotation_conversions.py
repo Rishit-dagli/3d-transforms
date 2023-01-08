@@ -11,7 +11,8 @@ vectors that is the R matrix is structured as
             [Rzx, Rzy, Rzz],
         ]  # (3, 3)
 
-Furthermore, we will assume for any functions in this module that these are quaternions with real part first that is a tensor of shape (..., 4).
+Furthermore, we will assume for any functions in this module that these are
+quaternions with real part first that is a tensor of shape (..., 4).
 """
 
 from typing import Optional
