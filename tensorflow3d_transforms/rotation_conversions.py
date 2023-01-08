@@ -4,11 +4,11 @@ import tensorflow as tf
 def quaternion_to_matrix(quaternions: tf.Tensor) -> tf.Tensor:
     """
     Convert rotations given as quaternions to rotation matrices.
-    
+
     Example:
 
     .. code-block:: python
- 
+
         quaternion = tf.constant([0.0, 0.0, 0.0, 4.0])
         output = tensorflow3d_transforms.quaternion_to_matrix(quaternions=quaternion)
         # <tf.Tensor: shape=(3, 3), dtype=float32, numpy=
