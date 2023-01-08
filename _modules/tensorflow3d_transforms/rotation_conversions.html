@@ -538,6 +538,28 @@
     <span class="n">oy</span> <span class="o">=</span> <span class="n">aw</span> <span class="o">*</span> <span class="n">by</span> <span class="o">-</span> <span class="n">ax</span> <span class="o">*</span> <span class="n">bz</span> <span class="o">+</span> <span class="n">ay</span> <span class="o">*</span> <span class="n">bw</span> <span class="o">+</span> <span class="n">az</span> <span class="o">*</span> <span class="n">bx</span>
     <span class="n">oz</span> <span class="o">=</span> <span class="n">aw</span> <span class="o">*</span> <span class="n">bz</span> <span class="o">+</span> <span class="n">ax</span> <span class="o">*</span> <span class="n">by</span> <span class="o">-</span> <span class="n">ay</span> <span class="o">*</span> <span class="n">bx</span> <span class="o">+</span> <span class="n">az</span> <span class="o">*</span> <span class="n">bw</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">ow</span><span class="p">,</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">oz</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="quaternion_multiply"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.quaternion_multiply">[docs]</a><span class="k">def</span> <span class="nf">quaternion_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multiply two quaternions representing rotations, returning the quaternion representing their composition, i.e. the versor with nonnegative real part.</span>
+<span class="sd">    </span>
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        a = tf.constant((1.,2.,3.,4.))</span>
+<span class="sd">        b = tf.constant((5.,6.,7.,8.))</span>
+<span class="sd">        quaternion_multiply(a=a, b=b)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 60., -12., -30., -24.], dtype=float32)&gt;</span>
+<span class="sd">        </span>
+<span class="sd">    :param a: First quaternion with real part first, as tensor of shape (..., 4).</span>
+<span class="sd">    :type a: tf.Tensor</span>
+<span class="sd">    :param b: Second quaternion with real part first, as tensor of shape (..., 4).</span>
+<span class="sd">    :type b: tf.Tensor</span>
+<span class="sd">    :return: Product of a and b as tensor of shape (..., 4).</span>
+<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">standardize_quaternion</span><span class="p">(</span><span class="n">quaternion_raw_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span></div>
 </pre></div>
 
            </div>
