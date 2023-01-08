@@ -589,7 +589,7 @@
 <span class="sd">    Example:</span>
 
 <span class="sd">    .. code-block:: python</span>
-<span class="sd">    </span>
+
 <span class="sd">        quaternion = tf.constant((1.,2.,3.,4.))</span>
 <span class="sd">        quaternion_invert(quaternion=quaternion)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1., -2., -3., -4.], dtype=float32)&gt;</span>
@@ -601,6 +601,38 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scaling</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">quaternion</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">quaternion</span> <span class="o">*</span> <span class="n">scaling</span></div>
+
+<div class="viewcode-block" id="quaternion_apply"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.quaternion_apply">[docs]</a><span class="k">def</span> <span class="nf">quaternion_apply</span><span class="p">(</span><span class="n">quaternion</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply the rotation given by a quaternion to a 3D point.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        quaternion = tf.constant((1.,1.,1.,4.))</span>
+<span class="sd">        point = tf.constant((1.,1.,1.))</span>
+<span class="sd">        quaternion_apply(quaternion=quaternion, point=point)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([-11.,   1.,  31.], dtype=float32)&gt;</span>
+
+<span class="sd">    :param quaternion: Quaternions as tensor of shape (..., 4), with real part first</span>
+<span class="sd">    :type quaternion: tf.Tensor</span>
+<span class="sd">    :param point: Points as tensor of shape (..., 3)</span>
+<span class="sd">    :type point: tf.Tensor</span>
+<span class="sd">    :return: Tensor of rotated points of shape (..., 3).</span>
+<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    :raises ValueError: If the last dimension of point is not 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Points must be 3D&quot;</span><span class="p">)</span>
+    
+    <span class="n">real_parts</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">point</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">point_as_quaternion</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">real_parts</span><span class="p">,</span> <span class="n">point</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">quaternion_raw_multiply</span><span class="p">(</span>
+        <span class="n">quaternion_raw_multiply</span><span class="p">(</span><span class="n">quaternion</span><span class="p">,</span> <span class="n">point_as_quaternion</span><span class="p">),</span>
+        <span class="n">quaternion_invert</span><span class="p">(</span><span class="n">quaternion</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span></div>
 </pre></div>
 
            </div>
