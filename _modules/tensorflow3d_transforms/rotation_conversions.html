@@ -112,6 +112,7 @@
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">quaternions</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span></div>
 
+
 <div class="viewcode-block" id="matrix_to_quaternion"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.matrix_to_quaternion">[docs]</a><span class="k">def</span> <span class="nf">matrix_to_quaternion</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert rotations given as rotation matrices to quaternions.</span>
@@ -146,17 +147,21 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid rotation matrix shape </span><span class="si">{matrix.shape}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
     <span class="n">batch_dim</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">m00</span><span class="p">,</span> <span class="n">m01</span><span class="p">,</span> <span class="n">m02</span><span class="p">,</span> <span class="n">m10</span><span class="p">,</span> <span class="n">m11</span><span class="p">,</span> <span class="n">m12</span><span class="p">,</span> <span class="n">m20</span><span class="p">,</span> <span class="n">m21</span><span class="p">,</span> <span class="n">m22</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">batch_dim</span> <span class="o">+</span> <span class="p">(</span><span class="mi">9</span><span class="p">,)),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m00</span><span class="p">,</span> <span class="n">m01</span><span class="p">,</span> <span class="n">m02</span><span class="p">,</span> <span class="n">m10</span><span class="p">,</span> <span class="n">m11</span><span class="p">,</span> <span class="n">m12</span><span class="p">,</span> <span class="n">m20</span><span class="p">,</span> <span class="n">m21</span><span class="p">,</span> <span class="n">m22</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">batch_dim</span> <span class="o">+</span> <span class="p">(</span><span class="mi">9</span><span class="p">,)),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="p">)</span>
 
-    <span class="n">q_abs</span> <span class="o">=</span> <span class="n">_sqrt_positive_part</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="mf">1.0</span> <span class="o">+</span> <span class="n">m00</span> <span class="o">+</span> <span class="n">m11</span> <span class="o">+</span> <span class="n">m22</span><span class="p">,</span>
-        <span class="mf">1.0</span> <span class="o">+</span> <span class="n">m00</span> <span class="o">-</span> <span class="n">m11</span> <span class="o">-</span> <span class="n">m22</span><span class="p">,</span>
-        <span class="mf">1.0</span> <span class="o">-</span> <span class="n">m00</span> <span class="o">+</span> <span class="n">m11</span> <span class="o">-</span> <span class="n">m22</span><span class="p">,</span>
-        <span class="mf">1.0</span> <span class="o">-</span> <span class="n">m00</span> <span class="o">-</span> <span class="n">m11</span> <span class="o">+</span> <span class="n">m22</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">))</span>
+    <span class="n">q_abs</span> <span class="o">=</span> <span class="n">_sqrt_positive_part</span><span class="p">(</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mf">1.0</span> <span class="o">+</span> <span class="n">m00</span> <span class="o">+</span> <span class="n">m11</span> <span class="o">+</span> <span class="n">m22</span><span class="p">,</span>
+                <span class="mf">1.0</span> <span class="o">+</span> <span class="n">m00</span> <span class="o">-</span> <span class="n">m11</span> <span class="o">-</span> <span class="n">m22</span><span class="p">,</span>
+                <span class="mf">1.0</span> <span class="o">-</span> <span class="n">m00</span> <span class="o">+</span> <span class="n">m11</span> <span class="o">-</span> <span class="n">m22</span><span class="p">,</span>
+                <span class="mf">1.0</span> <span class="o">-</span> <span class="n">m00</span> <span class="o">-</span> <span class="n">m11</span> <span class="o">+</span> <span class="n">m22</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="n">quat_by_rijk</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
         <span class="p">[</span>
@@ -169,11 +174,14 @@
     <span class="p">)</span>
 
     <span class="n">flr</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
-    <span class="n">quat_candidates</span> <span class="o">=</span> <span class="n">quat_by_rijk</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">q_abs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">flr</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">quat_candidates</span> <span class="o">=</span> <span class="n">quat_by_rijk</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="mf">2.0</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">q_abs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">flr</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">max_indices</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">q_abs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">one_hot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">max_indices</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
     <span class="n">selected</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">boolean_mask</span><span class="p">(</span><span class="n">quat_candidates</span><span class="p">,</span> <span class="n">one_hot</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">selected</span><span class="p">,</span> <span class="n">batch_dim</span> <span class="o">+</span> <span class="p">[</span><span class="mi">4</span><span class="p">])</span></div>
+
 
 <span class="k">def</span> <span class="nf">_sqrt_positive_part</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -188,6 +196,7 @@
     <span class="n">positive_mask</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">positive_mask</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">ret</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ret</span>
+
 
 <span class="k">def</span> <span class="nf">_axis_angle_rotation</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -204,7 +213,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">axis</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;letter must be either X, Y or Z.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">cos</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
     <span class="n">sin</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
     <span class="n">one</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
@@ -216,8 +225,9 @@
         <span class="n">R_flat</span> <span class="o">=</span> <span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="o">-</span><span class="n">sin</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">cos</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">axis</span> <span class="o">==</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span>
         <span class="n">R_flat</span> <span class="o">=</span> <span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="o">-</span><span class="n">sin</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">one</span><span class="p">)</span>
-    
+
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">R_flat</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">.</span><span class="n">shape</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
 
 <div class="viewcode-block" id="euler_angles_to_matrix"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.euler_angles_to_matrix">[docs]</a><span class="k">def</span> <span class="nf">euler_angles_to_matrix</span><span class="p">(</span><span class="n">euler_angles</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">convention</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -242,15 +252,15 @@
 <span class="sd">        # array([[[[1., 0., 0.],</span>
 <span class="sd">        #          [0., 1., 0.],</span>
 <span class="sd">        #          [0., 0., 1.]],</span>
-<span class="sd">        #  </span>
+<span class="sd">        #</span>
 <span class="sd">        #         [[1., 0., 0.],</span>
 <span class="sd">        #          [0., 1., 0.],</span>
 <span class="sd">        #          [0., 0., 1.]],</span>
-<span class="sd">        # </span>
+<span class="sd">        #</span>
 <span class="sd">        #         [[1., 0., 0.],</span>
 <span class="sd">        #          [0., 1., 0.],</span>
 <span class="sd">        #          [0., 0., 1.]]]], dtype=float32)&gt;</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param euler_angles: A tensor of shape (..., 3) representing euler angles.</span>
 <span class="sd">    :type euler_angles: tf.Tensor</span>
 <span class="sd">    :param convention: The euler angle convention. A string containing a combination of three uppercase letters from {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
@@ -264,15 +274,21 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">euler_angles</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid euler angle shape </span><span class="si">{euler_angles.shape}</span><span class="s2">, last dimension should be 3.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle shape </span><span class="si">{euler_angles.shape}</span><span class="s2">, last dimension should be 3.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">convention</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, should be a string of length 3.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, should be a string of length 3.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">convention</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="n">convention</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">convention</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, second character should be different from first and third.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid euler angle convention </span><span class="si">{convention}</span><span class="s2">, second character should be different from first and third.&quot;</span>
+        <span class="p">)</span>
     <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">convention</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">letter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid letter </span><span class="si">{letter}</span><span class="s2"> in convention string.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">matrices</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">_axis_angle_rotation</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">convention</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">euler_angles</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
