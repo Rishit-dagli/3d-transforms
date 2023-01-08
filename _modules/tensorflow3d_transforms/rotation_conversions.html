@@ -75,11 +75,11 @@
 <div class="viewcode-block" id="quaternion_to_matrix"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.quaternion_to_matrix">[docs]</a><span class="k">def</span> <span class="nf">quaternion_to_matrix</span><span class="p">(</span><span class="n">quaternions</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert rotations given as quaternions to rotation matrices.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Example:</span>
 
 <span class="sd">    .. code-block:: python</span>
-<span class="sd"> </span>
+
 <span class="sd">        quaternion = tf.constant([0.0, 0.0, 0.0, 4.0])</span>
 <span class="sd">        output = tensorflow3d_transforms.quaternion_to_matrix(quaternions=quaternion)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=</span>
