@@ -439,3 +439,31 @@ def standardize_quaternion(quaternions: tf.Tensor) -> tf.Tensor:
     :rtype: tf.Tensor
     """
     return tf.where(quaternions[..., 0:1] < 0, -quaternions, quaternions)
+
+def quaternion_raw_multiply(a: tf.Tensor, b:tf.Tensor) -> tf.Tensor:
+    """
+    Multiply two quaternions.
+
+    Example:
+
+    .. code-block:: python
+
+        a = tf.constant((1.,2.,3.,4.))
+        b = tf.constant((5.,6.,7.,8.))
+        quaternion_raw_multiply(a=a, b=b)
+        # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([-60.,  12.,  30.,  24.], dtype=float32)>
+    
+    :param a: First quaternion with real part first, as tensor of shape (..., 4).
+    :type a: tf.Tensor
+    :param b: Second quaternion with real part first, as tensor of shape (..., 4).
+    :type b: tf.Tensor
+    :return: Product of a and b as tensor of shape (..., 4).
+    :rtype: tf.Tensor
+    """
+    aw, ax, ay, az = tf.unstack(a, axis=-1)
+    bw, bx, by, bz = tf.unstack(b, axis=-1)
+    ow = aw * bw - ax * bx - ay * by - az * bz
+    ox = aw * bx + ax * bw + ay * bz - az * by
+    oy = aw * by - ax * bz + ay * bw + az * bx
+    oz = aw * bz + ax * by - ay * bx + az * bw
+    return tf.stack([ow, ox, oy, oz], axis=-1)
