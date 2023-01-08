@@ -117,3 +117,94 @@ def _sqrt_positive_part(x: tf.Tensor) -> tf.Tensor:
     positive_mask = x > 0
     ret = tf.where(positive_mask, tf.math.sqrt(x), ret)
     return ret
+
+def _axis_angle_rotation(axis: str, angle: tf.Tensor) -> tf.Tensor:
+    """
+    Return the rotation matrices for one of the rotations about an axis
+    of which Euler angles describe, for each value of the angle given.
+
+    :param axis: The axis about which the rotation is performed. Must be one of 'X', 'Y', 'Z'.
+    :type axis: str
+    :param angle: Any shape tensor of Euler angles in radians
+    :type angle: tf.Tensor
+    :return: A tensor of shape (..., 3, 3) representing rotation matrices.
+    :rtype: tf.Tensor
+    :raises ValueError: If the axis is not one of 'X', 'Y', 'Z'.
+    """
+    if axis not in ("X", "Y", "Z"):
+        raise ValueError("letter must be either X, Y or Z.")
+    
+    cos = tf.math.cos(angle)
+    sin = tf.math.sin(angle)
+    one = tf.ones_like(angle)
+    zero = tf.zeros_like(angle)
+
+    if axis == "X":
+        R_flat = (one, zero, zero, zero, cos, -sin, zero, sin, cos)
+    elif axis == "Y":
+        R_flat = (cos, zero, sin, zero, one, zero, -sin, zero, cos)
+    elif axis == "Z":
+        R_flat = (cos, -sin, zero, sin, cos, zero, zero, zero, one)
+    
+    return tf.reshape(tf.stack(R_flat, axis=-1), angle.shape + (3, 3))
+
+def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tensor:
+    """
+    Convert rotations given as euler angles to rotation matrices.
+
+    Example:
+
+    .. code-block:: python
+
+        euler_angles = tf.constant(
+            [
+                [
+                    [0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0],
+                ]
+            ]
+        )
+
+        euler_angles_to_matrix(euler_angles, convention="XYZ")
+        # <tf.Tensor: shape=(1, 3, 3, 3), dtype=float32, numpy=
+        # array([[[[1., 0., 0.],
+        #          [0., 1., 0.],
+        #          [0., 0., 1.]],
+        #  
+        #         [[1., 0., 0.],
+        #          [0., 1., 0.],
+        #          [0., 0., 1.]],
+        # 
+        #         [[1., 0., 0.],
+        #          [0., 1., 0.],
+        #          [0., 0., 1.]]]], dtype=float32)>
+    
+    :param euler_angles: A tensor of shape (..., 3) representing euler angles.
+    :type euler_angles: tf.Tensor
+    :param convention: The euler angle convention. A string containing a combination of three uppercase letters from {"X", "Y", and "Z"}.
+    :type convention: str
+    :return: A tensor of shape (..., 3, 3) representing rotation matrices.
+    :rtype: tf.Tensor
+    :raises ValueError: If the shape of the input euler angles is invalid that is does not have the shape (..., 3).
+    :raises ValueError: If the convention string is invalid that is does not have the length 3.
+    :raises ValueError: If the second character of the convention string is the same as the first or third.
+    :raises ValueError: If the convention string contains characters other than {"X", "Y", and "Z"}.
+    """
+
+    if euler_angles.shape[-1] != 3:
+        raise ValueError(f"Invalid euler angle shape {euler_angles.shape}, last dimension should be 3.")
+    if len(convention) != 3:
+        raise ValueError(f"Invalid euler angle convention {convention}, should be a string of length 3.")
+    if convention[1] in (convention[0], convention[2]):
+        raise ValueError(f"Invalid euler angle convention {convention}, second character should be different from first and third.")
+    for letter in convention:
+        if letter not in ("X", "Y", "Z"):
+            raise ValueError(f"Invalid letter {letter} in convention string.")
+    
+    matrices = [
+        _axis_angle_rotation(c, e)
+        for c, e in zip(convention, tf.unstack(euler_angles, axis=-1))
+    ]
+
+    return tf.linalg.matmul(tf.linalg.matmul(matrices[0], matrices[1]), matrices[2])
