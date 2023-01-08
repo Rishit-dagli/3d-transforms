@@ -508,3 +508,23 @@ def quaternion_multiply(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
     :rtype: tf.Tensor
     """
     return standardize_quaternion(quaternion_raw_multiply(a, b))
+
+
+def quaternion_invert(quaternion: tf.Tensor) -> tf.Tensor:
+    """Given a quaternion representing rotation, get the quaternion
+    representing its inverse.
+
+    Example:
+
+    .. code-block:: python
+        quaternion = tf.constant((1.,2.,3.,4.))
+        quaternion_invert(quaternion=quaternion)
+        # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1., -2., -3., -4.], dtype=float32)>
+
+    :param quaternion: Quaternions as tensor of shape (..., 4), with real part first, which must be versors (unit quaternions).
+    :type quaternion: tf.Tensor
+    :return: The inverse, a tensor of quaternions of shape (..., 4).
+    :rtype: tf.Tensor
+    """
+    scaling = tf.cast(tf.constant([1, -1, -1, -1]), dtype=quaternion.dtype)
+    return quaternion * scaling
