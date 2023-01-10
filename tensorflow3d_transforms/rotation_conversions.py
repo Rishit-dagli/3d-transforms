@@ -663,3 +663,34 @@ def matrix_to_axis_angle(matrix: tf.Tensor) -> tf.Tensor:
     :rtype: tf.Tensor
     """
     return quaternion_to_axis_angle(matrix_to_quaternion(matrix))
+
+
+def rotation_6d_to_matrix(d6: tf.Tensor) -> tf.Tensor:
+    """Converts 6D rotation representation by Zhou et al. [1] to rotation
+    matrix using Gram--Schmidt orthogonalization per Section B of [1].
+
+    Example:
+
+    .. code-block:: python
+
+        d6 = tf.constant((1.,1.,1.,1.,1.,1.))
+        rotation_6d_to_matrix(d6)
+        # <tf.Tensor: shape=(3, 3), dtype=float32, numpy=
+        # array([[0.57735026, 0.57735026, 0.57735026],
+        #        [0.57735026, 0.57735026, 0.57735026],
+        #        [0.        , 0.        , 0.        ]], dtype=float32)>
+        
+
+    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of Rotation Representations in Neural Networks. IEEE Conference on Computer Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
+
+    :param d6: 6D rotation representation as tensor of shape (..., 6).
+    :type d6: tf.Tensor
+    :return: Rotation matrices as tensor of shape (..., 3, 3).
+    :rtype: tf.Tensor
+    """
+    a1, a2 = d6[..., :3], d6[..., 3:]
+    b1 = tf.nn.l2_normalize(a1, axis = -1)
+    b2 = a2 - tf.reduce_sum(b1 * a2, keepdims=True) * b1
+    b2 = tf.linalg.normalize(b2)[0]
+    b3 = tf.linalg.cross(b1, b2)
+    return tf.stack((b1, b2, b3), axis=-2)
