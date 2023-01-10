@@ -734,6 +734,37 @@
 <span class="sd">    :rtype: tf.Tensor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">quaternion_to_axis_angle</span><span class="p">(</span><span class="n">matrix_to_quaternion</span><span class="p">(</span><span class="n">matrix</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="rotation_6d_to_matrix"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.rotation_6d_to_matrix">[docs]</a><span class="k">def</span> <span class="nf">rotation_6d_to_matrix</span><span class="p">(</span><span class="n">d6</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Converts 6D rotation representation by Zhou et al. [1] to rotation</span>
+<span class="sd">    matrix using Gram--Schmidt orthogonalization per Section B of [1].</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        d6 = tf.constant((1.,1.,1.,1.,1.,1.))</span>
+<span class="sd">        rotation_6d_to_matrix(d6)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=</span>
+<span class="sd">        # array([[0.57735026, 0.57735026, 0.57735026],</span>
+<span class="sd">        #        [0.57735026, 0.57735026, 0.57735026],</span>
+<span class="sd">        #        [0.        , 0.        , 0.        ]], dtype=float32)&gt;</span>
+
+
+<span class="sd">    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., &amp; Li, H. On the Continuity of Rotation Representations in Neural Networks. IEEE Conference on Computer Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035</span>
+
+<span class="sd">    :param d6: 6D rotation representation as tensor of shape (..., 6).</span>
+<span class="sd">    :type d6: tf.Tensor</span>
+<span class="sd">    :return: Rotation matrices as tensor of shape (..., 3, 3).</span>
+<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">d6</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">d6</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">:]</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">l2_normalize</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">a2</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">b1</span> <span class="o">*</span> <span class="n">a2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="n">b1</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">b2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">b3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">b3</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

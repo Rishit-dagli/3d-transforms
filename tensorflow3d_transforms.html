@@ -543,6 +543,34 @@ nonnegative real part.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.rotation_6d_to_matrix">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">rotation_6d_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d6</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#rotation_6d_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.rotation_6d_to_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Converts 6D rotation representation by Zhou et al. [1] to rotation
+matrix using Gram–Schmidt orthogonalization per Section B of [1].</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d6</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">rotation_6d_to_matrix</span><span class="p">(</span><span class="n">d6</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=</span>
+<span class="c1"># array([[0.57735026, 0.57735026, 0.57735026],</span>
+<span class="c1">#        [0.57735026, 0.57735026, 0.57735026],</span>
+<span class="c1">#        [0.        , 0.        , 0.        ]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<p>[1] Zhou, Y., Barnes, C., Lu, J., Yang, J., &amp; Li, H. On the Continuity of Rotation Representations in Neural Networks. IEEE Conference on Computer Vision and Pattern Recognition, 2019. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1812.07035">http://arxiv.org/abs/1812.07035</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d6</strong> (<em>tf.Tensor</em>) – 6D rotation representation as tensor of shape (…, 6).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rotation matrices as tensor of shape (…, 3, 3).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.standardize_quaternion">
 <span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">standardize_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#standardize_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.standardize_quaternion" title="Permalink to this definition"></a></dt>
 <dd><p>Convert a unit quaternion to a standard form: one in which the real part
