@@ -633,6 +633,28 @@
         <span class="n">quaternion_invert</span><span class="p">(</span><span class="n">quaternion</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="axis_angle_to_quaternion"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.axis_angle_to_quaternion">[docs]</a><span class="k">def</span> <span class="nf">axis_angle_to_quaternion</span><span class="p">(</span><span class="n">axis_angle</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Convert rotations given as axis/angle to quaternions.</span>
+
+<span class="sd">    :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector&#39;s direction.</span>
+<span class="sd">    :type axis_angle: torch.Tensor</span>
+<span class="sd">    :return: Quaternions as tensor of shape (..., 4), with real part first.</span>
+<span class="sd">    :rtype: torch.Tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis_angle</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">half_angles</span> <span class="o">=</span> <span class="n">angles</span> <span class="o">*</span> <span class="mf">0.5</span>
+    <span class="n">sin_half_angles_over_angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">sin_half_angles_over_angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">half_angles</span><span class="p">)</span> <span class="o">/</span> <span class="n">angles</span>
+    <span class="n">quaternions</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">half_angles</span><span class="p">),</span> <span class="n">axis_angle</span> <span class="o">*</span> <span class="n">sin_half_angles_over_angles</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">quaternions</span></div>
 </pre></div>
 
            </div>
