@@ -119,6 +119,14 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 <span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">axis_angle_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis_angle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#axis_angle_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.axis_angle_to_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>Convert rotations given as axis/angle to rotation matrices.</p>
 <p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">axis_angle</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">axis_angle</span><span class="o">=</span><span class="n">axis_angle</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=</span>
+<span class="c1"># array([[ 0.22629571, -0.18300788,  0.9567122 ],</span>
+<span class="c1">#        [ 0.9567122 ,  0.22629571, -0.18300788],</span>
+<span class="c1">#        [-0.18300788,  0.9567122 ,  0.22629571]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
@@ -136,6 +144,14 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 <dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.axis_angle_to_quaternion">
 <span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">axis_angle_to_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis_angle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#axis_angle_to_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.axis_angle_to_quaternion" title="Permalink to this definition"></a></dt>
 <dd><p>Convert rotations given as axis/angle to quaternions.</p>
+<blockquote>
+<div><p>Example:</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">axis_angle</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">axis_angle_to_quaternion</span><span class="p">(</span><span class="n">axis_angle</span><span class="o">=</span><span class="n">axis_angle</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([0.64785933, 0.43980235, 0.43980235, 0.43980235], dtype=float32)&gt;</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>axis_angle</strong> (<em>torch.Tensor</em>) – Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
@@ -199,6 +215,37 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 <li><p><strong>ValueError</strong> – If the second character of the convention string is the same as the first or third.</p></li>
 <li><p><strong>ValueError</strong> – If the convention string contains characters other than {“X”, “Y”, and “Z”}.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.matrix_to_axis_angle">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">matrix_to_axis_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#matrix_to_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.matrix_to_axis_angle" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as rotation matrices to axis/angle.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="p">[</span><span class="mf">0.15885946</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.56794965</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.48926896</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">1.0064808</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.39120296</span><span class="p">,</span> <span class="mf">1.6047943</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.05503756</span><span class="p">,</span> <span class="mf">0.817741</span><span class="p">,</span> <span class="mf">0.4543775</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">matrix_to_axis_angle</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(1, 3), dtype=float32, numpy=array([[-0.5801526,  3.2366152,  2.2535346]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>matrix: Rotation matrices as tensor of shape (…, 3, 3).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -388,6 +435,29 @@ real part.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Product of a and b as tensor of shape (…, 4).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_conversions.quaternion_to_axis_angle">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.rotation_conversions.</span></span><span class="sig-name descname"><span class="pre">quaternion_to_axis_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_to_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_conversions.quaternion_to_axis_angle" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as quaternions to axis/angle.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quaternions</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">quaternion_to_axis_angle</span><span class="p">(</span><span class="n">quaternions</span><span class="o">=</span><span class="n">quaternions</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 2.752039,  2.752039, 11.008156], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quaternions</strong> – Quaternions as tensor of shape (…, 4), with real part first.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
