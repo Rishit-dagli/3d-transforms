@@ -595,6 +595,15 @@ def axis_angle_to_matrix(axis_angle: tf.Tensor) -> tf.Tensor:
 
     Example:
 
+    .. code-block:: python
+
+        axis_angle = tf.constant((1.,1.,1.))
+        axis_angle_to_matrix(axis_angle=axis_angle)
+        # <tf.Tensor: shape=(3, 3), dtype=float32, numpy=
+        # array([[ 0.22629571, -0.18300788,  0.9567122 ],
+        #        [ 0.9567122 ,  0.22629571, -0.18300788],
+        #        [-0.18300788,  0.9567122 ,  0.22629571]], dtype=float32)>
+
     :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector's direction.
     :type axis_angle: tf.Tensor
     :return: Rotation matrices as tensor of shape (..., 3, 3).
