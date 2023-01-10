@@ -679,7 +679,7 @@ def rotation_6d_to_matrix(d6: tf.Tensor) -> tf.Tensor:
         # array([[0.57735026, 0.57735026, 0.57735026],
         #        [0.57735026, 0.57735026, 0.57735026],
         #        [0.        , 0.        , 0.        ]], dtype=float32)>
-        
+
 
     [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of Rotation Representations in Neural Networks. IEEE Conference on Computer Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
 
@@ -689,7 +689,7 @@ def rotation_6d_to_matrix(d6: tf.Tensor) -> tf.Tensor:
     :rtype: tf.Tensor
     """
     a1, a2 = d6[..., :3], d6[..., 3:]
-    b1 = tf.nn.l2_normalize(a1, axis = -1)
+    b1 = tf.nn.l2_normalize(a1, axis=-1)
     b2 = a2 - tf.reduce_sum(b1 * a2, keepdims=True) * b1
     b2 = tf.linalg.normalize(b2)[0]
     b3 = tf.linalg.cross(b1, b2)
