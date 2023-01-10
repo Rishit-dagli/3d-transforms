@@ -610,3 +610,31 @@ def axis_angle_to_matrix(axis_angle: tf.Tensor) -> tf.Tensor:
     :rtype: tf.Tensor
     """
     return quaternion_to_matrix(axis_angle_to_quaternion(axis_angle))
+
+def quaternion_to_axis_angle(quaternions: tf.Tensor) -> tf.Tensor:
+    """
+    Convert rotations given as quaternions to axis/angle.
+
+    Example:
+
+    .. code-block:: python
+
+        quaternions = tf.constant((1.,1.,1.,4.))
+        quaternion_to_axis_angle(quaternions=quaternions)
+        # <tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 2.752039,  2.752039, 11.008156], dtype=float32)>
+
+    :param quaternions: Quaternions as tensor of shape (..., 4), with real part first.
+    :type quaternion: tf.Tensor
+    :return: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector's direction.
+    :rtype: tf.Tensor
+    """
+
+    norms = tf.norm(quaternions[..., 1:], ord=2, axis=-1, keepdims=True)
+    half_angles = tf.math.atan2(norms, quaternions[..., :1])
+    angles = 2 * half_angles
+    sin_half_angles_over_angles = tf.cast(tf.zeros_like(angles), dtype=tf.float32)
+    sin_half_angles_over_angles = (
+        tf.math.sin(half_angles) / angles
+    )
+    return quaternions[..., 1:] / sin_half_angles_over_angles
+
