@@ -562,3 +562,25 @@ def quaternion_apply(quaternion: tf.Tensor, point: tf.Tensor) -> tf.Tensor:
         quaternion_invert(quaternion),
     )
     return out[..., 1:]
+
+
+
+
+
+def axis_angle_to_quaternion(axis_angle: tf.Tensor) -> tf.Tensor:
+    """Convert rotations given as axis/angle to quaternions.
+
+    :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector's direction.
+    :type axis_angle: torch.Tensor
+    :return: Quaternions as tensor of shape (..., 4), with real part first.
+    :rtype: torch.Tensor
+    """
+
+    angles = tf.norm(axis_angle, ord=2, axis=-1, keepdims=True)
+    half_angles = angles * 0.5
+    sin_half_angles_over_angles = tf.cast(tf.zeros_like(angles), dtype=tf.float32)
+    sin_half_angles_over_angles = tf.math.sin(half_angles) / angles
+    quaternions = tf.concat(
+        [tf.math.cos(half_angles), axis_angle * sin_half_angles_over_angles], axis=-1
+    )
+    return quaternions
