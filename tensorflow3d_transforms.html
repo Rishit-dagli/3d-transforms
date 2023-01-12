@@ -626,6 +626,515 @@ is non negative.</p>
 </div>
 <div class="section" id="module-tensorflow3d_transforms">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tensorflow3d_transforms" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.axis_angle_to_matrix">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">axis_angle_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis_angle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#axis_angle_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.axis_angle_to_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as axis/angle to rotation matrices.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">axis_angle</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">axis_angle</span><span class="o">=</span><span class="n">axis_angle</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=</span>
+<span class="c1"># array([[ 0.22629571, -0.18300788,  0.9567122 ],</span>
+<span class="c1">#        [ 0.9567122 ,  0.22629571, -0.18300788],</span>
+<span class="c1">#        [-0.18300788,  0.9567122 ,  0.22629571]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rotation matrices as tensor of shape (…, 3, 3).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.axis_angle_to_quaternion">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">axis_angle_to_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis_angle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#axis_angle_to_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.axis_angle_to_quaternion" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as axis/angle to quaternions.</p>
+<blockquote>
+<div><p>Example:</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">axis_angle</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">axis_angle_to_quaternion</span><span class="p">(</span><span class="n">axis_angle</span><span class="o">=</span><span class="n">axis_angle</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([0.64785933, 0.43980235, 0.43980235, 0.43980235], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>axis_angle</strong> (<em>torch.Tensor</em>) – Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Quaternions as tensor of shape (…, 4), with real part first.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.euler_angles_to_matrix">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">euler_angles_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">euler_angles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convention</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#euler_angles_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.euler_angles_to_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as euler angles to rotation matrices.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">euler_angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">euler_angles_to_matrix</span><span class="p">(</span><span class="n">euler_angles</span><span class="o">=</span><span class="n">euler_angles</span><span class="p">,</span> <span class="n">convention</span><span class="o">=</span><span class="s2">&quot;XYZ&quot;</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(1, 3, 3, 3), dtype=float32, numpy=</span>
+<span class="c1"># array([[[[1., 0., 0.],</span>
+<span class="c1">#          [0., 1., 0.],</span>
+<span class="c1">#          [0., 0., 1.]],</span>
+<span class="c1">#</span>
+<span class="c1">#         [[1., 0., 0.],</span>
+<span class="c1">#          [0., 1., 0.],</span>
+<span class="c1">#          [0., 0., 1.]],</span>
+<span class="c1">#</span>
+<span class="c1">#         [[1., 0., 0.],</span>
+<span class="c1">#          [0., 1., 0.],</span>
+<span class="c1">#          [0., 0., 1.]]]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>euler_angles</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3) representing euler angles.</p></li>
+<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string containing a combination of three uppercase letters from {“X”, “Y”, and “Z”}.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the shape of the input euler angles is invalid that is does not have the shape (…, 3).</p></li>
+<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not have the length 3.</p></li>
+<li><p><strong>ValueError</strong> – If the second character of the convention string is the same as the first or third.</p></li>
+<li><p><strong>ValueError</strong> – If the convention string contains characters other than {“X”, “Y”, and “Z”}.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.matrix_to_axis_angle">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">matrix_to_axis_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#matrix_to_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.matrix_to_axis_angle" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as rotation matrices to axis/angle.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="p">[</span><span class="mf">0.15885946</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.56794965</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.48926896</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">1.0064808</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.39120296</span><span class="p">,</span> <span class="mf">1.6047943</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.05503756</span><span class="p">,</span> <span class="mf">0.817741</span><span class="p">,</span> <span class="mf">0.4543775</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">matrix_to_axis_angle</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(1, 3), dtype=float32, numpy=array([[-0.5801526,  3.2366152,  2.2535346]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>matrix: Rotation matrices as tensor of shape (…, 3, 3).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.matrix_to_euler_angles">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">matrix_to_euler_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convention</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#matrix_to_euler_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.matrix_to_euler_angles" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotation matrices to euler angles in radians.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span>
+            <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span>
+            <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">matrix_to_euler_angles</span><span class="p">(</span><span class="n">matrix</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span> <span class="n">convention</span><span class="o">=</span><span class="s2">&quot;XYZ&quot;</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(1, 3, 3), dtype=float32, numpy=</span>
+<span class="c1"># array([[[-0.,  0., -0.],</span>
+<span class="c1">#         [-0.,  0., -0.],</span>
+<span class="c1">#         [-0.,  0., -0.]]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing rotation matrices.</p></li>
+<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string containing a combination of three uppercase letters from {“X”, “Y”, and “Z”}.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor of shape (…, 3) representing euler angles.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is does not have the shape (…, 3, 3).</p></li>
+<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not have the length 3.</p></li>
+<li><p><strong>ValueError</strong> – If the second character of the convention string is the same as the first or third.</p></li>
+<li><p><strong>ValueError</strong> – If the convention string contains characters other than {“X”, “Y”, and “Z”}.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.matrix_to_quaternion">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">matrix_to_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#matrix_to_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.matrix_to_quaternion" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as rotation matrices to quaternions.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="p">[</span><span class="mf">0.15885946</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.56794965</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.48926896</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">1.0064808</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.39120296</span><span class="p">,</span> <span class="mf">1.6047943</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.05503756</span><span class="p">,</span> <span class="mf">0.817741</span><span class="p">,</span> <span class="mf">0.4543775</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">matrix_to_quaternion</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(1, 4), dtype=float32, numpy=</span>
+<span class="c1"># array([[-0.1688297 , -0.16717434,  0.9326495 ,  0.6493691 ]],</span>
+<span class="c1"># dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor of shape (…, 4) representing quaternions with real part first.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is does not have the shape (…, 3, 3).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.matrix_to_rotation_6d">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">matrix_to_rotation_6d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#matrix_to_rotation_6d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.matrix_to_rotation_6d" title="Permalink to this definition"></a></dt>
+<dd><p>Converts rotation matrices to 6D rotation representation by Zhou et al.
+[1] by dropping the last row.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]])</span>
+<span class="n">matrix_to_rotation_6d</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(6,), dtype=float32, numpy=array([2., 1., 1., 1., 2., 1.], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<p>[1] Zhou, Y., Barnes, C., Lu, J., Yang, J., &amp; Li, H. On the Continuity of
+Rotation Representations in Neural Networks. IEEE Conference on Computer
+Vision and Pattern Recognition, 2019. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1812.07035">http://arxiv.org/abs/1812.07035</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – Rotation matrices as tensor of shape (…, 3, 3).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>6D rotation representation as tensor of shape (…, 6).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.quaternion_apply">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">quaternion_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternion</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.quaternion_apply" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the rotation given by a quaternion to a 3D point.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quaternion</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">point</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">quaternion_apply</span><span class="p">(</span><span class="n">quaternion</span><span class="o">=</span><span class="n">quaternion</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">point</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([-11.,   1.,  31.], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4), with real part first</p></li>
+<li><p><strong>point</strong> (<em>tf.Tensor</em>) – Points as tensor of shape (…, 3)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor of rotated points of shape (…, 3).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the last dimension of point is not 3.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.quaternion_invert">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">quaternion_invert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternion</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_invert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.quaternion_invert" title="Permalink to this definition"></a></dt>
+<dd><p>Given a quaternion representing rotation, get the quaternion
+representing its inverse.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quaternion</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">quaternion_invert</span><span class="p">(</span><span class="n">quaternion</span><span class="o">=</span><span class="n">quaternion</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1., -2., -3., -4.], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4), with real part first, which must be versors (unit quaternions).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The inverse, a tensor of quaternions of shape (…, 4).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.quaternion_multiply">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">quaternion_multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_multiply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.quaternion_multiply" title="Permalink to this definition"></a></dt>
+<dd><p>Multiply two quaternions representing rotations, returning the
+quaternion representing their composition, i.e. the versor with nonnegative
+real part.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">5.</span><span class="p">,</span><span class="mf">6.</span><span class="p">,</span><span class="mf">7.</span><span class="p">,</span><span class="mf">8.</span><span class="p">))</span>
+<span class="n">quaternion_multiply</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 60., -12., -30., -24.], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor of shape (…, 4).</p></li>
+<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor of shape (…, 4).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Product of a and b as tensor of shape (…, 4).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.quaternion_raw_multiply">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">quaternion_raw_multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_raw_multiply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.quaternion_raw_multiply" title="Permalink to this definition"></a></dt>
+<dd><p>Multiply two quaternions.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">5.</span><span class="p">,</span><span class="mf">6.</span><span class="p">,</span><span class="mf">7.</span><span class="p">,</span><span class="mf">8.</span><span class="p">))</span>
+<span class="n">quaternion_raw_multiply</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([-60.,  12.,  30.,  24.], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor of shape (…, 4).</p></li>
+<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor of shape (…, 4).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Product of a and b as tensor of shape (…, 4).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.quaternion_to_axis_angle">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">quaternion_to_axis_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_to_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.quaternion_to_axis_angle" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as quaternions to axis/angle.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quaternions</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">quaternion_to_axis_angle</span><span class="p">(</span><span class="n">quaternions</span><span class="o">=</span><span class="n">quaternions</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 2.752039,  2.752039, 11.008156], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quaternions</strong> – Quaternions as tensor of shape (…, 4), with real part first.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.quaternion_to_matrix">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">quaternion_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#quaternion_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.quaternion_to_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Convert rotations given as quaternions to rotation matrices.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quaternion</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">tensorflow3d_transforms</span><span class="o">.</span><span class="n">quaternion_to_matrix</span><span class="p">(</span><span class="n">quaternions</span><span class="o">=</span><span class="n">quaternion</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=</span>
+<span class="c1"># array([[-1.,  0.,  0.],</span>
+<span class="c1">#     [ 0., -1.,  0.],</span>
+<span class="c1">#     [ 0.,  0.,  1.]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 4) representing quaternions with real part first.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.random_quaternions">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">random_quaternions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.dtypes.DType</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">tf.float32</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#random_quaternions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.random_quaternions" title="Permalink to this definition"></a></dt>
+<dd><p>Generate random quaternions representing rotations, i.e. versors with
+nonnegative real part.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">random_quaternions</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(2, 4), dtype=float32, numpy=...&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Number of quaternions to generate.</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned tensor, defaults to tf.float32.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor of shape (n, 4) representing quaternions.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.random_rotations">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">random_rotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.framework.dtypes.DType</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">tf.float32</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#random_rotations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.random_rotations" title="Permalink to this definition"></a></dt>
+<dd><p>Generate random rotations as 3x3 rotation matrices.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">random_rotations</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=...&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Number of rotation matrices to generate.</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned tensor, defaults to tf.float32.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor of shape (n, 3, 3) representing rotation matrices.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.rotation_6d_to_matrix">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">rotation_6d_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d6</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#rotation_6d_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.rotation_6d_to_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Converts 6D rotation representation by Zhou et al. [1] to rotation
+matrix using Gram–Schmidt orthogonalization per Section B of [1].</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d6</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">rotation_6d_to_matrix</span><span class="p">(</span><span class="n">d6</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=</span>
+<span class="c1"># array([[0.57735026, 0.57735026, 0.57735026],</span>
+<span class="c1">#        [0.57735026, 0.57735026, 0.57735026],</span>
+<span class="c1">#        [0.        , 0.        , 0.        ]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<p>[1] Zhou, Y., Barnes, C., Lu, J., Yang, J., &amp; Li, H. On the Continuity of
+Rotation Representations in Neural Networks. IEEE Conference on Computer
+Vision and Pattern Recognition, 2019. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1812.07035">http://arxiv.org/abs/1812.07035</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d6</strong> (<em>tf.Tensor</em>) – 6D rotation representation as tensor of shape (…, 6).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rotation matrices as tensor of shape (…, 3, 3).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.standardize_quaternion">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.</span></span><span class="sig-name descname"><span class="pre">standardize_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/rotation_conversions.html#standardize_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.standardize_quaternion" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a unit quaternion to a standard form: one in which the real part
+is non negative.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quaternions</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">))</span>
+<span class="n">standardize_quaternion</span><span class="p">(</span><span class="n">quaternions</span><span class="o">=</span><span class="n">quaternions</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1.,  2.,  1.,  1.], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – Quaternions with real part first, as tensor of shape (…, 4).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Standardized quaternions as tensor of shape (…, 4).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 
