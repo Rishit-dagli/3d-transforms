@@ -681,8 +681,10 @@ def rotation_6d_to_matrix(d6: tf.Tensor) -> tf.Tensor:
         #        [0.        , 0.        , 0.        ]], dtype=float32)>
 
 
-    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of Rotation Representations in Neural Networks. IEEE Conference on Computer Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
-
+    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of
+    Rotation Representations in Neural Networks. IEEE Conference on Computer
+    Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
+    
     :param d6: 6D rotation representation as tensor of shape (..., 6).
     :type d6: tf.Tensor
     :return: Rotation matrices as tensor of shape (..., 3, 3).
@@ -708,7 +710,9 @@ def matrix_to_rotation_6d(matrix: tf.Tensor) -> tf.Tensor:
         matrix_to_rotation_6d(matrix)
         # <tf.Tensor: shape=(6,), dtype=float32, numpy=array([2., 1., 1., 1., 2., 1.], dtype=float32)>
 
-    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of Rotation Representations in Neural Networks. IEEE Conference on Computer Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
+    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of
+    Rotation Representations in Neural Networks. IEEE Conference on Computer
+    Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
 
     :param matrix: Rotation matrices as tensor of shape (..., 3, 3).
     :type matrix: tf.Tensor
