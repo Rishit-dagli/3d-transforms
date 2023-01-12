@@ -755,7 +755,7 @@
 <span class="sd">    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., &amp; Li, H. On the Continuity of</span>
 <span class="sd">    Rotation Representations in Neural Networks. IEEE Conference on Computer</span>
 <span class="sd">    Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param d6: 6D rotation representation as tensor of shape (..., 6).</span>
 <span class="sd">    :type d6: tf.Tensor</span>
 <span class="sd">    :return: Rotation matrices as tensor of shape (..., 3, 3).</span>
@@ -771,6 +771,7 @@
 
 <div class="viewcode-block" id="matrix_to_rotation_6d"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.matrix_to_rotation_6d">[docs]</a><span class="k">def</span> <span class="nf">matrix_to_rotation_6d</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Converts rotation matrices to 6D rotation representation by Zhou et al.</span>
+
 <span class="sd">    [1] by dropping the last row.</span>
 
 <span class="sd">    Example:</span>
