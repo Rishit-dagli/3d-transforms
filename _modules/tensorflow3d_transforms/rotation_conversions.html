@@ -765,6 +765,29 @@
     <span class="n">b2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">b2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">b3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">b3</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="matrix_to_rotation_6d"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.rotation_conversions.matrix_to_rotation_6d">[docs]</a><span class="k">def</span> <span class="nf">matrix_to_rotation_6d</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Converts rotation matrices to 6D rotation representation by Zhou et al.</span>
+<span class="sd">    [1] by dropping the last row.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        matrix = tf.constant([[2.0, 1.0, 1.0], [1.0, 2.0, 1.0], [1.0, 1.0, 2.0]])</span>
+<span class="sd">        matrix_to_rotation_6d(matrix)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(6,), dtype=float32, numpy=array([2., 1., 1., 1., 2., 1.], dtype=float32)&gt;</span>
+
+<span class="sd">    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., &amp; Li, H. On the Continuity of Rotation Representations in Neural Networks. IEEE Conference on Computer Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035</span>
+
+<span class="sd">    :param matrix: Rotation matrices as tensor of shape (..., 3, 3).</span>
+<span class="sd">    :type matrix: tf.Tensor</span>
+<span class="sd">    :return: 6D rotation representation as tensor of shape (..., 6).</span>
+<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">batch_dim</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]),</span> <span class="n">batch_dim</span> <span class="o">+</span> <span class="p">(</span><span class="mi">6</span><span class="p">,))</span></div>
 </pre></div>
 
            </div>
