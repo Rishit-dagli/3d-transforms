@@ -700,6 +700,7 @@ def rotation_6d_to_matrix(d6: tf.Tensor) -> tf.Tensor:
 
 def matrix_to_rotation_6d(matrix: tf.Tensor) -> tf.Tensor:
     """Converts rotation matrices to 6D rotation representation by Zhou et al.
+
     [1] by dropping the last row.
 
     Example:

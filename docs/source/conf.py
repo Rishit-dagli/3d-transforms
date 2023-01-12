@@ -40,6 +40,7 @@ extensions = [
     "sphinx_rtd_dark_mode",
     "sphinxemoji.sphinxemoji",
     "nbsphinx",
+    "sphinxcontrib.napoleon",
 ]
 
 # user starts in light mode
