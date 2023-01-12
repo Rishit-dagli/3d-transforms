@@ -684,7 +684,7 @@ def rotation_6d_to_matrix(d6: tf.Tensor) -> tf.Tensor:
     [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of
     Rotation Representations in Neural Networks. IEEE Conference on Computer
     Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
-    
+
     :param d6: 6D rotation representation as tensor of shape (..., 6).
     :type d6: tf.Tensor
     :return: Rotation matrices as tensor of shape (..., 3, 3).
