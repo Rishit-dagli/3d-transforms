@@ -694,3 +694,26 @@ def rotation_6d_to_matrix(d6: tf.Tensor) -> tf.Tensor:
     b2 = tf.linalg.normalize(b2)[0]
     b3 = tf.linalg.cross(b1, b2)
     return tf.stack((b1, b2, b3), axis=-2)
+
+
+def matrix_to_rotation_6d(matrix: tf.Tensor) -> tf.Tensor:
+    """Converts rotation matrices to 6D rotation representation by Zhou et al.
+    [1] by dropping the last row.
+
+    Example:
+
+    .. code-block:: python
+
+        matrix = tf.constant([[2.0, 1.0, 1.0], [1.0, 2.0, 1.0], [1.0, 1.0, 2.0]])
+        matrix_to_rotation_6d(matrix)
+        # <tf.Tensor: shape=(6,), dtype=float32, numpy=array([2., 1., 1., 1., 2., 1.], dtype=float32)>
+
+    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of Rotation Representations in Neural Networks. IEEE Conference on Computer Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
+
+    :param matrix: Rotation matrices as tensor of shape (..., 3, 3).
+    :type matrix: tf.Tensor
+    :return: 6D rotation representation as tensor of shape (..., 6).
+    :rtype: tf.Tensor
+    """
+    batch_dim = matrix.shape[:-2]
+    return tf.reshape(tf.identity(matrix[..., :2, :]), batch_dim + (6,))
