@@ -576,9 +576,9 @@ def axis_angle_to_quaternion(axis_angle: tf.Tensor) -> tf.Tensor:
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([0.64785933, 0.43980235, 0.43980235, 0.43980235], dtype=float32)>
 
     :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector's direction.
-    :type axis_angle: torch.Tensor
+    :type axis_angle: tf.Tensor
     :return: Quaternions as tensor of shape (..., 4), with real part first.
-    :rtype: torch.Tensor
+    :rtype: tf.Tensor
     """
 
     angles = tf.norm(axis_angle, ord=2, axis=-1, keepdims=True)
