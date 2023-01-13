@@ -35,11 +35,13 @@ def quaternion_to_matrix(quaternions: tf.Tensor) -> tf.Tensor:
         #     [ 0., -1.,  0.],
         #     [ 0.,  0.,  1.]], dtype=float32)>
 
+    Args:
+        quaternions (tf.Tensor): A tensor of shape (..., 4) representing
+            quaternions with real part first.
 
-    :param quaternions: A tensor of shape (..., 4) representing quaternions with real part first.
-    :type quaternions: tf.Tensor
-    :return: A tensor of shape (..., 3, 3) representing rotation matrices.
-    :rtype: tf.Tensor
+    Returns:
+        tf.Tensor: A tensor of shape (..., 3, 3) representing rotation
+        matrices.
     """
     r, i, j, k = tf.unstack(quaternions, axis=-1)
     two_s = 2.0 / tf.reduce_sum(quaternions * quaternions, axis=-1)
@@ -83,12 +85,17 @@ def matrix_to_quaternion(matrix: tf.Tensor) -> tf.Tensor:
         # array([[-0.1688297 , -0.16717434,  0.9326495 ,  0.6493691 ]],
         # dtype=float32)>
 
+    Args:
+        matrix (tf.Tensor): A tensor of shape (..., 3, 3) representing
+            rotation matrices.
 
-    :param matrix: A tensor of shape (..., 3, 3) representing rotation matrices.
-    :type matrix: tf.Tensor
-    :return: A tensor of shape (..., 4) representing quaternions with real part first.
-    :rtype: tf.Tensor
-    :raises ValueError: If the shape of the input matrix is invalid that is does not have the shape (..., 3, 3).
+    Returns:
+        tf.Tensor: A tensor of shape (..., 4) representing quaternions
+        with real part first.
+
+    Raises:
+        ValueError: If the shape of the input matrix is invalid that is
+            does not have the shape (..., 3, 3).
     """
     if matrix.shape[-1] != 3 or matrix.shape[-2] != 3:
         raise ValueError(f"Invalid rotation matrix shape {matrix.shape}.")
@@ -133,10 +140,11 @@ def matrix_to_quaternion(matrix: tf.Tensor) -> tf.Tensor:
 def _sqrt_positive_part(x: tf.Tensor) -> tf.Tensor:
     """Returns the square root of all positive elements of x and 0 for others.
 
-    :param x: A tensor
-    :type x: tf.Tensor
-    :return: A tensor with the same shape as x
-    :rtype: tf.Tensor
+    Args:
+        x (tf.Tensor): A tensor
+
+    Returns:
+        tf.Tensor: A tensor with the same shape as x
     """
     ret = tf.zeros_like(x)
     positive_mask = x > 0
@@ -148,13 +156,17 @@ def _axis_angle_rotation(axis: str, angle: tf.Tensor) -> tf.Tensor:
     """Return the rotation matrices for one of the rotations about an axis of
     which Euler angles describe, for each value of the angle given.
 
-    :param axis: The axis about which the rotation is performed. Must be one of 'X', 'Y', 'Z'.
-    :type axis: str
-    :param angle: Any shape tensor of Euler angles in radians
-    :type angle: tf.Tensor
-    :return: A tensor of shape (..., 3, 3) representing rotation matrices.
-    :rtype: tf.Tensor
-    :raises ValueError: If the axis is not one of 'X', 'Y', 'Z'.
+    Args:
+        axis (str): The axis about which the rotation is performed. Must
+            be one of 'X', 'Y', 'Z'.
+        angle (tf.Tensor): Any shape tensor of Euler angles in radians
+
+    Returns:
+        tf.Tensor: A tensor of shape (..., 3, 3) representing rotation
+        matrices.
+
+    Raises:
+        ValueError: If the axis is not one of 'X', 'Y', 'Z'.
     """
     if axis not in ("X", "Y", "Z"):
         raise ValueError("letter must be either X, Y or Z.")
@@ -205,16 +217,26 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
         #          [0., 1., 0.],
         #          [0., 0., 1.]]]], dtype=float32)>
 
-    :param euler_angles: A tensor of shape (..., 3) representing euler angles.
-    :type euler_angles: tf.Tensor
-    :param convention: The euler angle convention. A string containing a combination of three uppercase letters from {"X", "Y", and "Z"}.
-    :type convention: str
-    :return: A tensor of shape (..., 3, 3) representing rotation matrices.
-    :rtype: tf.Tensor
-    :raises ValueError: If the shape of the input euler angles is invalid that is does not have the shape (..., 3).
-    :raises ValueError: If the convention string is invalid that is does not have the length 3.
-    :raises ValueError: If the second character of the convention string is the same as the first or third.
-    :raises ValueError: If the convention string contains characters other than {"X", "Y", and "Z"}.
+    Args:
+        euler_angles (tf.Tensor): A tensor of shape (..., 3)
+            representing euler angles.
+        convention (str): The euler angle convention. A string
+            containing a combination of three uppercase letters from
+            {"X", "Y", and "Z"}.
+
+    Returns:
+        tf.Tensor: A tensor of shape (..., 3, 3) representing rotation
+        matrices.
+
+    Raises:
+        ValueError: If the shape of the input euler angles is invalid
+            that is does not have the shape (..., 3).
+        ValueError: If the convention string is invalid that is does not
+            have the length 3.
+        ValueError: If the second character of the convention string is
+            the same as the first or third.
+        ValueError: If the convention string contains characters other
+            than {"X", "Y", and "Z"}.
     """
 
     if euler_angles.shape[-1] != 3:
@@ -247,11 +269,15 @@ def euler_angles_to_matrix(euler_angles: tf.Tensor, convention: str) -> tf.Tenso
 def _index_from_letter(letter: str) -> int:
     """Return the index of the axis corresponding to the letter.
 
-    :param letter: The letter corresponding to the axis. Must be one of 'X', 'Y', 'Z'.
-    :type letter: str
-    :return: The index of the axis.
-    :rtype: int
-    :raises ValueError: If the letter is not one of 'X', 'Y', 'Z'.
+    Args:
+        letter (str): The letter corresponding to the axis. Must be one
+            of 'X', 'Y', 'Z'.
+
+    Returns:
+        int: The index of the axis.
+
+    Raises:
+        ValueError: If the letter is not one of 'X', 'Y', 'Z'.
     """
     if letter == "X":
         return 0
@@ -268,18 +294,23 @@ def _angle_from_tan(
     """Extract the first or third Euler angle from the two members of the
     matrix which are positive constant times its sine and cosine.
 
-    :param axis: Axis label "X" or "Y or "Z" for the angle we are finding.
-    :type axis: str
-    :param other_axis: Axis label "X" or "Y or "Z" for the middle axis in the convention.
-    :type other_axis: str
-    :param data: Rotation matrices as tensor of shape (..., 3, 3).
-    :type data: tf.Tensor
-    :param horizontal: Whether we are looking for the angle for the third axis, which means the relevant entries are in the same row of the rotation matrix. If not, they are in the same column.
-    :type horizontal: bool
-    :param tait_bryan: Whether the first and third axes in the convention differ.
-    :type tait_bryan: bool
-    :return: Euler Angles in radians for each matrix in data as a tensor of shape (...).
-    :rtype: tf.Tensor
+    Args:
+        axis (str): Axis label "X" or "Y or "Z" for the angle we are
+            finding.
+        other_axis (str): Axis label "X" or "Y or "Z" for the middle
+            axis in the convention.
+        data (tf.Tensor): Rotation matrices as tensor of shape (..., 3,
+            3).
+        horizontal (bool): Whether we are looking for the angle for the
+            third axis, which means the relevant entries are in the same
+            row of the rotation matrix. If not, they are in the same
+            column.
+        tait_bryan (bool): Whether the first and third axes in the
+            convention differ.
+
+    Returns:
+        tf.Tensor: Euler Angles in radians for each matrix in data as a
+        tensor of shape (...).
     """
 
     i1, i2 = {"X": (2, 1), "Y": (0, 2), "Z": (1, 0)}[axis]
@@ -315,16 +346,25 @@ def matrix_to_euler_angles(matrix: tf.Tensor, convention: str) -> tf.Tensor:
         #         [-0.,  0., -0.],
         #         [-0.,  0., -0.]]], dtype=float32)>
 
-    :param matrix: A tensor of shape (..., 3, 3) representing rotation matrices.
-    :type matrix: tf.Tensor
-    :param convention: The euler angle convention. A string containing a combination of three uppercase letters from {"X", "Y", and "Z"}.
-    :type convention: str
-    :return: A tensor of shape (..., 3) representing euler angles.
-    :rtype: tf.Tensor
-    :raises ValueError: If the shape of the input matrix is invalid that is does not have the shape (..., 3, 3).
-    :raises ValueError: If the convention string is invalid that is does not have the length 3.
-    :raises ValueError: If the second character of the convention string is the same as the first or third.
-    :raises ValueError: If the convention string contains characters other than {"X", "Y", and "Z"}.
+    Args:
+        matrix (tf.Tensor): A tensor of shape (..., 3, 3) representing
+            rotation matrices.
+        convention (str): The euler angle convention. A string
+            containing a combination of three uppercase letters from
+            {"X", "Y", and "Z"}.
+
+    Returns:
+        tf.Tensor: A tensor of shape (..., 3) representing euler angles.
+
+    Raises:
+        ValueError: If the shape of the input matrix is invalid that is
+            does not have the shape (..., 3, 3).
+        ValueError: If the convention string is invalid that is does not
+            have the length 3.
+        ValueError: If the second character of the convention string is
+            the same as the first or third.
+        ValueError: If the convention string contains characters other
+            than {"X", "Y", and "Z"}.
     """
     if len(convention) != 3:
         raise ValueError(
@@ -374,13 +414,16 @@ def _copysign(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
     element of b. This is like the standard copysign floating-point operation,
     but is not careful about negative 0 and NaN.
 
-    :param a: Source tensor.
-    :type a: tf.Tensor
-    :param b: Tensor whose signs will be used, of the same shape as a.
-    :type b: tf.Tensor
-    :return: Tensor of the same shape as a with the signs of b.
-    :rtype: tf.Tensor
-    :raises ValueError: If the shapes of a and b do not match.
+    Args:
+        a (tf.Tensor): Source tensor.
+        b (tf.Tensor): Tensor whose signs will be used, of the same
+            shape as a.
+
+    Returns:
+        tf.Tensor: Tensor of the same shape as a with the signs of b.
+
+    Raises:
+        ValueError: If the shapes of a and b do not match.
     """
     if a.shape != b.shape:
         raise ValueError(f"Shapes of a and b do not match: {a.shape} and {b.shape}.")
@@ -402,12 +445,13 @@ def random_quaternions(
         random_quaternions(2)
         # <tf.Tensor: shape=(2, 4), dtype=float32, numpy=...>
 
-    :param n: Number of quaternions to generate.
-    :type n: int
-    :param dtype: Data type of the returned tensor, defaults to tf.float32.
-    :type dtype: Optional[tf.dtype], optional
-    :return: Tensor of shape (n, 4) representing quaternions.
-    :rtype: tf.Tensor
+    Args:
+        n (int): Number of quaternions to generate.
+        dtype (Optional[tf.dtype], optional): Data type of the returned
+            tensor, defaults to tf.float32.
+
+    Returns:
+        tf.Tensor: Tensor of shape (n, 4) representing quaternions.
     """
     o = tf.random.normal((n, 4), dtype=dtype)
     s = tf.reduce_sum(o * o, axis=1)
@@ -428,12 +472,14 @@ def random_rotations(
         random_rotations(2)
         # <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=...>
 
-    :param n: Number of rotation matrices to generate.
-    :type n: int
-    :param dtype: Data type of the returned tensor, defaults to tf.float32.
-    :type dtype: Optional[tf.dtype], optional
-    :return: Tensor of shape (n, 3, 3) representing rotation matrices.
-    :rtype: tf.Tensor
+    Args:
+        n (int): Number of rotation matrices to generate.
+        dtype (Optional[tf.dtype], optional): Data type of the returned
+            tensor, defaults to tf.float32.
+
+    Returns:
+        tf.Tensor: Tensor of shape (n, 3, 3) representing rotation
+        matrices.
     """
     quaternions = random_quaternions(n, dtype=dtype)
     return quaternion_to_matrix(quaternions)
@@ -451,10 +497,12 @@ def standardize_quaternion(quaternions: tf.Tensor) -> tf.Tensor:
         standardize_quaternion(quaternions=quaternions)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1.,  2.,  1.,  1.], dtype=float32)>
 
-    :param quaternions: Quaternions with real part first, as tensor of shape (..., 4).
-    :type quaternions: tf.Tensor
-    :return: Standardized quaternions as tensor of shape (..., 4).
-    :rtype: tf.Tensor
+    Args:
+        quaternions (tf.Tensor): Quaternions with real part first, as
+            tensor of shape (..., 4).
+
+    Returns:
+        tf.Tensor: Standardized quaternions as tensor of shape (..., 4).
     """
     return tf.where(quaternions[..., 0:1] < 0, -quaternions, quaternions)
 
@@ -471,12 +519,14 @@ def quaternion_raw_multiply(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
         quaternion_raw_multiply(a=a, b=b)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([-60.,  12.,  30.,  24.], dtype=float32)>
 
-    :param a: First quaternion with real part first, as tensor of shape (..., 4).
-    :type a: tf.Tensor
-    :param b: Second quaternion with real part first, as tensor of shape (..., 4).
-    :type b: tf.Tensor
-    :return: Product of a and b as tensor of shape (..., 4).
-    :rtype: tf.Tensor
+    Args:
+        a (tf.Tensor): First quaternion with real part first, as tensor
+            of shape (..., 4).
+        b (tf.Tensor): Second quaternion with real part first, as tensor
+            of shape (..., 4).
+
+    Returns:
+        tf.Tensor: Product of a and b as tensor of shape (..., 4).
     """
     aw, ax, ay, az = tf.unstack(a, axis=-1)
     bw, bx, by, bz = tf.unstack(b, axis=-1)
@@ -501,12 +551,14 @@ def quaternion_multiply(a: tf.Tensor, b: tf.Tensor) -> tf.Tensor:
         quaternion_multiply(a=a, b=b)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 60., -12., -30., -24.], dtype=float32)>
 
-    :param a: First quaternion with real part first, as tensor of shape (..., 4).
-    :type a: tf.Tensor
-    :param b: Second quaternion with real part first, as tensor of shape (..., 4).
-    :type b: tf.Tensor
-    :return: Product of a and b as tensor of shape (..., 4).
-    :rtype: tf.Tensor
+    Args:
+        a (tf.Tensor): First quaternion with real part first, as tensor
+            of shape (..., 4).
+        b (tf.Tensor): Second quaternion with real part first, as tensor
+            of shape (..., 4).
+
+    Returns:
+        tf.Tensor: Product of a and b as tensor of shape (..., 4).
     """
     return standardize_quaternion(quaternion_raw_multiply(a, b))
 
@@ -523,10 +575,14 @@ def quaternion_invert(quaternion: tf.Tensor) -> tf.Tensor:
         quaternion_invert(quaternion=quaternion)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1., -2., -3., -4.], dtype=float32)>
 
-    :param quaternion: Quaternions as tensor of shape (..., 4), with real part first, which must be versors (unit quaternions).
-    :type quaternion: tf.Tensor
-    :return: The inverse, a tensor of quaternions of shape (..., 4).
-    :rtype: tf.Tensor
+    Args:
+        quaternion (tf.Tensor): Quaternions as tensor of shape (..., 4),
+            with real part first, which must be versors (unit
+            quaternions).
+
+    Returns:
+        tf.Tensor: The inverse, a tensor of quaternions of shape (...,
+        4).
     """
     scaling = tf.cast(tf.constant([1, -1, -1, -1]), dtype=quaternion.dtype)
     return quaternion * scaling
@@ -544,13 +600,16 @@ def quaternion_apply(quaternion: tf.Tensor, point: tf.Tensor) -> tf.Tensor:
         quaternion_apply(quaternion=quaternion, point=point)
         # <tf.Tensor: shape=(3,), dtype=float32, numpy=array([-11.,   1.,  31.], dtype=float32)>
 
-    :param quaternion: Quaternions as tensor of shape (..., 4), with real part first
-    :type quaternion: tf.Tensor
-    :param point: Points as tensor of shape (..., 3)
-    :type point: tf.Tensor
-    :return: Tensor of rotated points of shape (..., 3).
-    :rtype: tf.Tensor
-    :raises ValueError: If the last dimension of point is not 3.
+    Args:
+        quaternion (tf.Tensor): Quaternions as tensor of shape (..., 4),
+            with real part first
+        point (tf.Tensor): Points as tensor of shape (..., 3)
+
+    Returns:
+        tf.Tensor: Tensor of rotated points of shape (..., 3).
+
+    Raises:
+        ValueError: If the last dimension of point is not 3.
     """
     if point.shape[-1] != 3:
         raise ValueError("Points must be 3D")
@@ -575,10 +634,15 @@ def axis_angle_to_quaternion(axis_angle: tf.Tensor) -> tf.Tensor:
         axis_angle_to_quaternion(axis_angle=axis_angle)
         # <tf.Tensor: shape=(4,), dtype=float32, numpy=array([0.64785933, 0.43980235, 0.43980235, 0.43980235], dtype=float32)>
 
-    :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector's direction.
-    :type axis_angle: tf.Tensor
-    :return: Quaternions as tensor of shape (..., 4), with real part first.
-    :rtype: tf.Tensor
+    Args:
+        axis_angle (tf.Tensor): Rotations given as a vector in axis
+            angle form, as a tensor of shape (..., 3), where the
+            magnitude is the angle turned anticlockwise in radians
+            around the vector's direction.
+
+    Returns:
+        tf.Tensor: Quaternions as tensor of shape (..., 4), with real
+        part first.
     """
 
     angles = tf.norm(axis_angle, ord=2, axis=-1, keepdims=True)
@@ -605,10 +669,14 @@ def axis_angle_to_matrix(axis_angle: tf.Tensor) -> tf.Tensor:
         #        [ 0.9567122 ,  0.22629571, -0.18300788],
         #        [-0.18300788,  0.9567122 ,  0.22629571]], dtype=float32)>
 
-    :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector's direction.
-    :type axis_angle: tf.Tensor
-    :return: Rotation matrices as tensor of shape (..., 3, 3).
-    :rtype: tf.Tensor
+    Args:
+        axis_angle (tf.Tensor): Rotations given as a vector in axis
+            angle form, as a tensor of shape (..., 3), where the
+            magnitude is the angle turned anticlockwise in radians
+            around the vector's direction.
+
+    Returns:
+        tf.Tensor: Rotation matrices as tensor of shape (..., 3, 3).
     """
     return quaternion_to_matrix(axis_angle_to_quaternion(axis_angle))
 
@@ -624,10 +692,15 @@ def quaternion_to_axis_angle(quaternions: tf.Tensor) -> tf.Tensor:
         quaternion_to_axis_angle(quaternions=quaternions)
         # <tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 2.752039,  2.752039, 11.008156], dtype=float32)>
 
-    :param quaternions: Quaternions as tensor of shape (..., 4), with real part first.
-    :type quaternion: tf.Tensor
-    :return: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector's direction.
-    :rtype: tf.Tensor
+    Args:
+        quaternions: Quaternions as tensor of shape (..., 4), with real
+            part first.
+        quaternion (tf.Tensor)
+
+    Returns:
+        tf.Tensor: Rotations given as a vector in axis angle form, as a
+        tensor of shape (..., 3), where the magnitude is the angle
+        turned anticlockwise in radians around the vector's direction.
     """
 
     norms = tf.norm(quaternions[..., 1:], ord=2, axis=-1, keepdims=True)
@@ -658,9 +731,14 @@ def matrix_to_axis_angle(matrix: tf.Tensor) -> tf.Tensor:
         # <tf.Tensor: shape=(1, 3), dtype=float32, numpy=array([[-0.5801526,  3.2366152,  2.2535346]], dtype=float32)>
 
     :param: matrix: Rotation matrices as tensor of shape (..., 3, 3).
-    :type matrix: tf.Tensor
-    :return: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector's direction.
-    :rtype: tf.Tensor
+
+    Args:
+        matrix (tf.Tensor)
+
+    Returns:
+        tf.Tensor: Rotations given as a vector in axis angle form, as a
+        tensor of shape (..., 3), where the magnitude is the angle
+        turned anticlockwise in radians around the vector's direction.
     """
     return quaternion_to_axis_angle(matrix_to_quaternion(matrix))
 
@@ -680,15 +758,16 @@ def rotation_6d_to_matrix(d6: tf.Tensor) -> tf.Tensor:
         #        [0.57735026, 0.57735026, 0.57735026],
         #        [0.        , 0.        , 0.        ]], dtype=float32)>
 
-
     [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., & Li, H. On the Continuity of
     Rotation Representations in Neural Networks. IEEE Conference on Computer
     Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
 
-    :param d6: 6D rotation representation as tensor of shape (..., 6).
-    :type d6: tf.Tensor
-    :return: Rotation matrices as tensor of shape (..., 3, 3).
-    :rtype: tf.Tensor
+    Args:
+        d6 (tf.Tensor): 6D rotation representation as tensor of shape
+            (..., 6).
+
+    Returns:
+        tf.Tensor: Rotation matrices as tensor of shape (..., 3, 3).
     """
     a1, a2 = d6[..., :3], d6[..., 3:]
     b1 = tf.nn.l2_normalize(a1, axis=-1)
@@ -715,10 +794,13 @@ def matrix_to_rotation_6d(matrix: tf.Tensor) -> tf.Tensor:
     Rotation Representations in Neural Networks. IEEE Conference on Computer
     Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035
 
-    :param matrix: Rotation matrices as tensor of shape (..., 3, 3).
-    :type matrix: tf.Tensor
-    :return: 6D rotation representation as tensor of shape (..., 6).
-    :rtype: tf.Tensor
+    Args:
+        matrix (tf.Tensor): Rotation matrices as tensor of shape (...,
+            3, 3).
+
+    Returns:
+        tf.Tensor: 6D rotation representation as tensor of shape (...,
+        6).
     """
     batch_dim = matrix.shape[:-2]
     return tf.reshape(tf.identity(matrix[..., :2, :]), batch_dim + (6,))
