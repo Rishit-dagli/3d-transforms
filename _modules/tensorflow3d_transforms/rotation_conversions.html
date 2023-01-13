@@ -647,9 +647,9 @@
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([0.64785933, 0.43980235, 0.43980235, 0.43980235], dtype=float32)&gt;</span>
 
 <span class="sd">    :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector&#39;s direction.</span>
-<span class="sd">    :type axis_angle: torch.Tensor</span>
+<span class="sd">    :type axis_angle: tf.Tensor</span>
 <span class="sd">    :return: Quaternions as tensor of shape (..., 4), with real part first.</span>
-<span class="sd">    :rtype: torch.Tensor</span>
+<span class="sd">    :rtype: tf.Tensor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis_angle</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
