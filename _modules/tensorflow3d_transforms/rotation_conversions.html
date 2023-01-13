@@ -106,11 +106,13 @@
 <span class="sd">        #     [ 0., -1.,  0.],</span>
 <span class="sd">        #     [ 0.,  0.,  1.]], dtype=float32)&gt;</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        quaternions (tf.Tensor): A tensor of shape (..., 4) representing</span>
+<span class="sd">            quaternions with real part first.</span>
 
-<span class="sd">    :param quaternions: A tensor of shape (..., 4) representing quaternions with real part first.</span>
-<span class="sd">    :type quaternions: tf.Tensor</span>
-<span class="sd">    :return: A tensor of shape (..., 3, 3) representing rotation matrices.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: A tensor of shape (..., 3, 3) representing rotation</span>
+<span class="sd">        matrices.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">quaternions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">two_s</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">quaternions</span> <span class="o">*</span> <span class="n">quaternions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -154,12 +156,17 @@
 <span class="sd">        # array([[-0.1688297 , -0.16717434,  0.9326495 ,  0.6493691 ]],</span>
 <span class="sd">        # dtype=float32)&gt;</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        matrix (tf.Tensor): A tensor of shape (..., 3, 3) representing</span>
+<span class="sd">            rotation matrices.</span>
 
-<span class="sd">    :param matrix: A tensor of shape (..., 3, 3) representing rotation matrices.</span>
-<span class="sd">    :type matrix: tf.Tensor</span>
-<span class="sd">    :return: A tensor of shape (..., 4) representing quaternions with real part first.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
-<span class="sd">    :raises ValueError: If the shape of the input matrix is invalid that is does not have the shape (..., 3, 3).</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: A tensor of shape (..., 4) representing quaternions</span>
+<span class="sd">        with real part first.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the shape of the input matrix is invalid that is</span>
+<span class="sd">            does not have the shape (..., 3, 3).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid rotation matrix shape </span><span class="si">{matrix.shape}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -204,10 +211,11 @@
 <span class="k">def</span> <span class="nf">_sqrt_positive_part</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Returns the square root of all positive elements of x and 0 for others.</span>
 
-<span class="sd">    :param x: A tensor</span>
-<span class="sd">    :type x: tf.Tensor</span>
-<span class="sd">    :return: A tensor with the same shape as x</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        x (tf.Tensor): A tensor</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: A tensor with the same shape as x</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">positive_mask</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -219,13 +227,17 @@
     <span class="sd">&quot;&quot;&quot;Return the rotation matrices for one of the rotations about an axis of</span>
 <span class="sd">    which Euler angles describe, for each value of the angle given.</span>
 
-<span class="sd">    :param axis: The axis about which the rotation is performed. Must be one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
-<span class="sd">    :type axis: str</span>
-<span class="sd">    :param angle: Any shape tensor of Euler angles in radians</span>
-<span class="sd">    :type angle: tf.Tensor</span>
-<span class="sd">    :return: A tensor of shape (..., 3, 3) representing rotation matrices.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
-<span class="sd">    :raises ValueError: If the axis is not one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        axis (str): The axis about which the rotation is performed. Must</span>
+<span class="sd">            be one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
+<span class="sd">        angle (tf.Tensor): Any shape tensor of Euler angles in radians</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: A tensor of shape (..., 3, 3) representing rotation</span>
+<span class="sd">        matrices.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the axis is not one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">axis</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;letter must be either X, Y or Z.&quot;</span><span class="p">)</span>
@@ -276,16 +288,26 @@
 <span class="sd">        #          [0., 1., 0.],</span>
 <span class="sd">        #          [0., 0., 1.]]]], dtype=float32)&gt;</span>
 
-<span class="sd">    :param euler_angles: A tensor of shape (..., 3) representing euler angles.</span>
-<span class="sd">    :type euler_angles: tf.Tensor</span>
-<span class="sd">    :param convention: The euler angle convention. A string containing a combination of three uppercase letters from {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
-<span class="sd">    :type convention: str</span>
-<span class="sd">    :return: A tensor of shape (..., 3, 3) representing rotation matrices.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
-<span class="sd">    :raises ValueError: If the shape of the input euler angles is invalid that is does not have the shape (..., 3).</span>
-<span class="sd">    :raises ValueError: If the convention string is invalid that is does not have the length 3.</span>
-<span class="sd">    :raises ValueError: If the second character of the convention string is the same as the first or third.</span>
-<span class="sd">    :raises ValueError: If the convention string contains characters other than {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        euler_angles (tf.Tensor): A tensor of shape (..., 3)</span>
+<span class="sd">            representing euler angles.</span>
+<span class="sd">        convention (str): The euler angle convention. A string</span>
+<span class="sd">            containing a combination of three uppercase letters from</span>
+<span class="sd">            {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: A tensor of shape (..., 3, 3) representing rotation</span>
+<span class="sd">        matrices.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the shape of the input euler angles is invalid</span>
+<span class="sd">            that is does not have the shape (..., 3).</span>
+<span class="sd">        ValueError: If the convention string is invalid that is does not</span>
+<span class="sd">            have the length 3.</span>
+<span class="sd">        ValueError: If the second character of the convention string is</span>
+<span class="sd">            the same as the first or third.</span>
+<span class="sd">        ValueError: If the convention string contains characters other</span>
+<span class="sd">            than {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">euler_angles</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
@@ -318,11 +340,15 @@
 <span class="k">def</span> <span class="nf">_index_from_letter</span><span class="p">(</span><span class="n">letter</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the index of the axis corresponding to the letter.</span>
 
-<span class="sd">    :param letter: The letter corresponding to the axis. Must be one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
-<span class="sd">    :type letter: str</span>
-<span class="sd">    :return: The index of the axis.</span>
-<span class="sd">    :rtype: int</span>
-<span class="sd">    :raises ValueError: If the letter is not one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        letter (str): The letter corresponding to the axis. Must be one</span>
+<span class="sd">            of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The index of the axis.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the letter is not one of &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">letter</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span>
@@ -339,18 +365,23 @@
     <span class="sd">&quot;&quot;&quot;Extract the first or third Euler angle from the two members of the</span>
 <span class="sd">    matrix which are positive constant times its sine and cosine.</span>
 
-<span class="sd">    :param axis: Axis label &quot;X&quot; or &quot;Y or &quot;Z&quot; for the angle we are finding.</span>
-<span class="sd">    :type axis: str</span>
-<span class="sd">    :param other_axis: Axis label &quot;X&quot; or &quot;Y or &quot;Z&quot; for the middle axis in the convention.</span>
-<span class="sd">    :type other_axis: str</span>
-<span class="sd">    :param data: Rotation matrices as tensor of shape (..., 3, 3).</span>
-<span class="sd">    :type data: tf.Tensor</span>
-<span class="sd">    :param horizontal: Whether we are looking for the angle for the third axis, which means the relevant entries are in the same row of the rotation matrix. If not, they are in the same column.</span>
-<span class="sd">    :type horizontal: bool</span>
-<span class="sd">    :param tait_bryan: Whether the first and third axes in the convention differ.</span>
-<span class="sd">    :type tait_bryan: bool</span>
-<span class="sd">    :return: Euler Angles in radians for each matrix in data as a tensor of shape (...).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        axis (str): Axis label &quot;X&quot; or &quot;Y or &quot;Z&quot; for the angle we are</span>
+<span class="sd">            finding.</span>
+<span class="sd">        other_axis (str): Axis label &quot;X&quot; or &quot;Y or &quot;Z&quot; for the middle</span>
+<span class="sd">            axis in the convention.</span>
+<span class="sd">        data (tf.Tensor): Rotation matrices as tensor of shape (..., 3,</span>
+<span class="sd">            3).</span>
+<span class="sd">        horizontal (bool): Whether we are looking for the angle for the</span>
+<span class="sd">            third axis, which means the relevant entries are in the same</span>
+<span class="sd">            row of the rotation matrix. If not, they are in the same</span>
+<span class="sd">            column.</span>
+<span class="sd">        tait_bryan (bool): Whether the first and third axes in the</span>
+<span class="sd">            convention differ.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Euler Angles in radians for each matrix in data as a</span>
+<span class="sd">        tensor of shape (...).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)}[</span><span class="n">axis</span><span class="p">]</span>
@@ -386,16 +417,25 @@
 <span class="sd">        #         [-0.,  0., -0.],</span>
 <span class="sd">        #         [-0.,  0., -0.]]], dtype=float32)&gt;</span>
 
-<span class="sd">    :param matrix: A tensor of shape (..., 3, 3) representing rotation matrices.</span>
-<span class="sd">    :type matrix: tf.Tensor</span>
-<span class="sd">    :param convention: The euler angle convention. A string containing a combination of three uppercase letters from {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
-<span class="sd">    :type convention: str</span>
-<span class="sd">    :return: A tensor of shape (..., 3) representing euler angles.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
-<span class="sd">    :raises ValueError: If the shape of the input matrix is invalid that is does not have the shape (..., 3, 3).</span>
-<span class="sd">    :raises ValueError: If the convention string is invalid that is does not have the length 3.</span>
-<span class="sd">    :raises ValueError: If the second character of the convention string is the same as the first or third.</span>
-<span class="sd">    :raises ValueError: If the convention string contains characters other than {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        matrix (tf.Tensor): A tensor of shape (..., 3, 3) representing</span>
+<span class="sd">            rotation matrices.</span>
+<span class="sd">        convention (str): The euler angle convention. A string</span>
+<span class="sd">            containing a combination of three uppercase letters from</span>
+<span class="sd">            {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: A tensor of shape (..., 3) representing euler angles.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the shape of the input matrix is invalid that is</span>
+<span class="sd">            does not have the shape (..., 3, 3).</span>
+<span class="sd">        ValueError: If the convention string is invalid that is does not</span>
+<span class="sd">            have the length 3.</span>
+<span class="sd">        ValueError: If the second character of the convention string is</span>
+<span class="sd">            the same as the first or third.</span>
+<span class="sd">        ValueError: If the convention string contains characters other</span>
+<span class="sd">            than {&quot;X&quot;, &quot;Y&quot;, and &quot;Z&quot;}.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">convention</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -445,13 +485,16 @@
 <span class="sd">    element of b. This is like the standard copysign floating-point operation,</span>
 <span class="sd">    but is not careful about negative 0 and NaN.</span>
 
-<span class="sd">    :param a: Source tensor.</span>
-<span class="sd">    :type a: tf.Tensor</span>
-<span class="sd">    :param b: Tensor whose signs will be used, of the same shape as a.</span>
-<span class="sd">    :type b: tf.Tensor</span>
-<span class="sd">    :return: Tensor of the same shape as a with the signs of b.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
-<span class="sd">    :raises ValueError: If the shapes of a and b do not match.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        a (tf.Tensor): Source tensor.</span>
+<span class="sd">        b (tf.Tensor): Tensor whose signs will be used, of the same</span>
+<span class="sd">            shape as a.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Tensor of the same shape as a with the signs of b.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the shapes of a and b do not match.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shapes of a and b do not match: </span><span class="si">{a.shape}</span><span class="s2"> and </span><span class="si">{b.shape}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -473,12 +516,13 @@
 <span class="sd">        random_quaternions(2)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(2, 4), dtype=float32, numpy=...&gt;</span>
 
-<span class="sd">    :param n: Number of quaternions to generate.</span>
-<span class="sd">    :type n: int</span>
-<span class="sd">    :param dtype: Data type of the returned tensor, defaults to tf.float32.</span>
-<span class="sd">    :type dtype: Optional[tf.dtype], optional</span>
-<span class="sd">    :return: Tensor of shape (n, 4) representing quaternions.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        n (int): Number of quaternions to generate.</span>
+<span class="sd">        dtype (Optional[tf.dtype], optional): Data type of the returned</span>
+<span class="sd">            tensor, defaults to tf.float32.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Tensor of shape (n, 4) representing quaternions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">o</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">o</span> <span class="o">*</span> <span class="n">o</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -499,12 +543,14 @@
 <span class="sd">        random_rotations(2)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=...&gt;</span>
 
-<span class="sd">    :param n: Number of rotation matrices to generate.</span>
-<span class="sd">    :type n: int</span>
-<span class="sd">    :param dtype: Data type of the returned tensor, defaults to tf.float32.</span>
-<span class="sd">    :type dtype: Optional[tf.dtype], optional</span>
-<span class="sd">    :return: Tensor of shape (n, 3, 3) representing rotation matrices.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        n (int): Number of rotation matrices to generate.</span>
+<span class="sd">        dtype (Optional[tf.dtype], optional): Data type of the returned</span>
+<span class="sd">            tensor, defaults to tf.float32.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Tensor of shape (n, 3, 3) representing rotation</span>
+<span class="sd">        matrices.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">quaternions</span> <span class="o">=</span> <span class="n">random_quaternions</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">quaternion_to_matrix</span><span class="p">(</span><span class="n">quaternions</span><span class="p">)</span></div>
@@ -522,10 +568,12 @@
 <span class="sd">        standardize_quaternion(quaternions=quaternions)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1.,  2.,  1.,  1.], dtype=float32)&gt;</span>
 
-<span class="sd">    :param quaternions: Quaternions with real part first, as tensor of shape (..., 4).</span>
-<span class="sd">    :type quaternions: tf.Tensor</span>
-<span class="sd">    :return: Standardized quaternions as tensor of shape (..., 4).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        quaternions (tf.Tensor): Quaternions with real part first, as</span>
+<span class="sd">            tensor of shape (..., 4).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Standardized quaternions as tensor of shape (..., 4).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">quaternions</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">quaternions</span><span class="p">,</span> <span class="n">quaternions</span><span class="p">)</span></div>
 
@@ -542,12 +590,14 @@
 <span class="sd">        quaternion_raw_multiply(a=a, b=b)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([-60.,  12.,  30.,  24.], dtype=float32)&gt;</span>
 
-<span class="sd">    :param a: First quaternion with real part first, as tensor of shape (..., 4).</span>
-<span class="sd">    :type a: tf.Tensor</span>
-<span class="sd">    :param b: Second quaternion with real part first, as tensor of shape (..., 4).</span>
-<span class="sd">    :type b: tf.Tensor</span>
-<span class="sd">    :return: Product of a and b as tensor of shape (..., 4).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        a (tf.Tensor): First quaternion with real part first, as tensor</span>
+<span class="sd">            of shape (..., 4).</span>
+<span class="sd">        b (tf.Tensor): Second quaternion with real part first, as tensor</span>
+<span class="sd">            of shape (..., 4).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Product of a and b as tensor of shape (..., 4).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">aw</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">az</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">bw</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">bz</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -572,12 +622,14 @@
 <span class="sd">        quaternion_multiply(a=a, b=b)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 60., -12., -30., -24.], dtype=float32)&gt;</span>
 
-<span class="sd">    :param a: First quaternion with real part first, as tensor of shape (..., 4).</span>
-<span class="sd">    :type a: tf.Tensor</span>
-<span class="sd">    :param b: Second quaternion with real part first, as tensor of shape (..., 4).</span>
-<span class="sd">    :type b: tf.Tensor</span>
-<span class="sd">    :return: Product of a and b as tensor of shape (..., 4).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        a (tf.Tensor): First quaternion with real part first, as tensor</span>
+<span class="sd">            of shape (..., 4).</span>
+<span class="sd">        b (tf.Tensor): Second quaternion with real part first, as tensor</span>
+<span class="sd">            of shape (..., 4).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Product of a and b as tensor of shape (..., 4).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">standardize_quaternion</span><span class="p">(</span><span class="n">quaternion_raw_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span></div>
 
@@ -594,10 +646,14 @@
 <span class="sd">        quaternion_invert(quaternion=quaternion)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([ 1., -2., -3., -4.], dtype=float32)&gt;</span>
 
-<span class="sd">    :param quaternion: Quaternions as tensor of shape (..., 4), with real part first, which must be versors (unit quaternions).</span>
-<span class="sd">    :type quaternion: tf.Tensor</span>
-<span class="sd">    :return: The inverse, a tensor of quaternions of shape (..., 4).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        quaternion (tf.Tensor): Quaternions as tensor of shape (..., 4),</span>
+<span class="sd">            with real part first, which must be versors (unit</span>
+<span class="sd">            quaternions).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: The inverse, a tensor of quaternions of shape (...,</span>
+<span class="sd">        4).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scaling</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">quaternion</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">quaternion</span> <span class="o">*</span> <span class="n">scaling</span></div>
@@ -615,13 +671,16 @@
 <span class="sd">        quaternion_apply(quaternion=quaternion, point=point)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([-11.,   1.,  31.], dtype=float32)&gt;</span>
 
-<span class="sd">    :param quaternion: Quaternions as tensor of shape (..., 4), with real part first</span>
-<span class="sd">    :type quaternion: tf.Tensor</span>
-<span class="sd">    :param point: Points as tensor of shape (..., 3)</span>
-<span class="sd">    :type point: tf.Tensor</span>
-<span class="sd">    :return: Tensor of rotated points of shape (..., 3).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
-<span class="sd">    :raises ValueError: If the last dimension of point is not 3.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        quaternion (tf.Tensor): Quaternions as tensor of shape (..., 4),</span>
+<span class="sd">            with real part first</span>
+<span class="sd">        point (tf.Tensor): Points as tensor of shape (..., 3)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Tensor of rotated points of shape (..., 3).</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the last dimension of point is not 3.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Points must be 3D&quot;</span><span class="p">)</span>
@@ -646,10 +705,15 @@
 <span class="sd">        axis_angle_to_quaternion(axis_angle=axis_angle)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(4,), dtype=float32, numpy=array([0.64785933, 0.43980235, 0.43980235, 0.43980235], dtype=float32)&gt;</span>
 
-<span class="sd">    :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector&#39;s direction.</span>
-<span class="sd">    :type axis_angle: tf.Tensor</span>
-<span class="sd">    :return: Quaternions as tensor of shape (..., 4), with real part first.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        axis_angle (tf.Tensor): Rotations given as a vector in axis</span>
+<span class="sd">            angle form, as a tensor of shape (..., 3), where the</span>
+<span class="sd">            magnitude is the angle turned anticlockwise in radians</span>
+<span class="sd">            around the vector&#39;s direction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Quaternions as tensor of shape (..., 4), with real</span>
+<span class="sd">        part first.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis_angle</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -676,10 +740,14 @@
 <span class="sd">        #        [ 0.9567122 ,  0.22629571, -0.18300788],</span>
 <span class="sd">        #        [-0.18300788,  0.9567122 ,  0.22629571]], dtype=float32)&gt;</span>
 
-<span class="sd">    :param axis_angle: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector&#39;s direction.</span>
-<span class="sd">    :type axis_angle: tf.Tensor</span>
-<span class="sd">    :return: Rotation matrices as tensor of shape (..., 3, 3).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        axis_angle (tf.Tensor): Rotations given as a vector in axis</span>
+<span class="sd">            angle form, as a tensor of shape (..., 3), where the</span>
+<span class="sd">            magnitude is the angle turned anticlockwise in radians</span>
+<span class="sd">            around the vector&#39;s direction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Rotation matrices as tensor of shape (..., 3, 3).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">quaternion_to_matrix</span><span class="p">(</span><span class="n">axis_angle_to_quaternion</span><span class="p">(</span><span class="n">axis_angle</span><span class="p">))</span></div>
 
@@ -695,10 +763,15 @@
 <span class="sd">        quaternion_to_axis_angle(quaternions=quaternions)</span>
 <span class="sd">        # &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 2.752039,  2.752039, 11.008156], dtype=float32)&gt;</span>
 
-<span class="sd">    :param quaternions: Quaternions as tensor of shape (..., 4), with real part first.</span>
-<span class="sd">    :type quaternion: tf.Tensor</span>
-<span class="sd">    :return: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector&#39;s direction.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        quaternions: Quaternions as tensor of shape (..., 4), with real</span>
+<span class="sd">            part first.</span>
+<span class="sd">        quaternion (tf.Tensor)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Rotations given as a vector in axis angle form, as a</span>
+<span class="sd">        tensor of shape (..., 3), where the magnitude is the angle</span>
+<span class="sd">        turned anticlockwise in radians around the vector&#39;s direction.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">norms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">quaternions</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">:],</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -729,9 +802,14 @@
 <span class="sd">        # &lt;tf.Tensor: shape=(1, 3), dtype=float32, numpy=array([[-0.5801526,  3.2366152,  2.2535346]], dtype=float32)&gt;</span>
 
 <span class="sd">    :param: matrix: Rotation matrices as tensor of shape (..., 3, 3).</span>
-<span class="sd">    :type matrix: tf.Tensor</span>
-<span class="sd">    :return: Rotations given as a vector in axis angle form, as a tensor of shape (..., 3), where the magnitude is the angle turned anticlockwise in radians around the vector&#39;s direction.</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        matrix (tf.Tensor)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Rotations given as a vector in axis angle form, as a</span>
+<span class="sd">        tensor of shape (..., 3), where the magnitude is the angle</span>
+<span class="sd">        turned anticlockwise in radians around the vector&#39;s direction.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">quaternion_to_axis_angle</span><span class="p">(</span><span class="n">matrix_to_quaternion</span><span class="p">(</span><span class="n">matrix</span><span class="p">))</span></div>
 
@@ -751,15 +829,16 @@
 <span class="sd">        #        [0.57735026, 0.57735026, 0.57735026],</span>
 <span class="sd">        #        [0.        , 0.        , 0.        ]], dtype=float32)&gt;</span>
 
-
 <span class="sd">    [1] Zhou, Y., Barnes, C., Lu, J., Yang, J., &amp; Li, H. On the Continuity of</span>
 <span class="sd">    Rotation Representations in Neural Networks. IEEE Conference on Computer</span>
 <span class="sd">    Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035</span>
 
-<span class="sd">    :param d6: 6D rotation representation as tensor of shape (..., 6).</span>
-<span class="sd">    :type d6: tf.Tensor</span>
-<span class="sd">    :return: Rotation matrices as tensor of shape (..., 3, 3).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        d6 (tf.Tensor): 6D rotation representation as tensor of shape</span>
+<span class="sd">            (..., 6).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Rotation matrices as tensor of shape (..., 3, 3).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">d6</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">d6</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">:]</span>
     <span class="n">b1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">l2_normalize</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -786,10 +865,13 @@
 <span class="sd">    Rotation Representations in Neural Networks. IEEE Conference on Computer</span>
 <span class="sd">    Vision and Pattern Recognition, 2019. Retrieved from http://arxiv.org/abs/1812.07035</span>
 
-<span class="sd">    :param matrix: Rotation matrices as tensor of shape (..., 3, 3).</span>
-<span class="sd">    :type matrix: tf.Tensor</span>
-<span class="sd">    :return: 6D rotation representation as tensor of shape (..., 6).</span>
-<span class="sd">    :rtype: tf.Tensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        matrix (tf.Tensor): Rotation matrices as tensor of shape (...,</span>
+<span class="sd">            3, 3).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: 6D rotation representation as tensor of shape (...,</span>
+<span class="sd">        6).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">batch_dim</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]),</span> <span class="n">batch_dim</span> <span class="o">+</span> <span class="p">(</span><span class="mi">6</span><span class="p">,))</span></div>

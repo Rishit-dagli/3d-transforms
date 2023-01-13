@@ -133,7 +133,10 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis
+angle form, as a tensor of shape (…, 3), where the
+magnitude is the angle turned anticlockwise in radians
+around the vector’s direction.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Rotation matrices as tensor of shape (…, 3, 3).</p>
@@ -158,10 +161,14 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis
+angle form, as a tensor of shape (…, 3), where the
+magnitude is the angle turned anticlockwise in radians
+around the vector’s direction.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Quaternions as tensor of shape (…, 4), with real part first.</p>
+<dd class="field-even"><p>Quaternions as tensor of shape (…, 4), with real
+part first.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -202,22 +209,30 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>euler_angles</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3) representing euler angles.</p></li>
-<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string containing a combination of three uppercase letters from {“X”, “Y”, and “Z”}.</p></li>
+<li><p><strong>euler_angles</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3)
+representing euler angles.</p></li>
+<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string
+containing a combination of three uppercase letters from
+{“X”, “Y”, and “Z”}.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation
+matrices.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the shape of the input euler angles is invalid that is does not have the shape (…, 3).</p></li>
-<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not have the length 3.</p></li>
-<li><p><strong>ValueError</strong> – If the second character of the convention string is the same as the first or third.</p></li>
-<li><p><strong>ValueError</strong> – If the convention string contains characters other than {“X”, “Y”, and “Z”}.</p></li>
+<li><p><strong>ValueError</strong> – If the shape of the input euler angles is invalid
+    that is does not have the shape (…, 3).</p></li>
+<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not
+    have the length 3.</p></li>
+<li><p><strong>ValueError</strong> – If the second character of the convention string is
+    the same as the first or third.</p></li>
+<li><p><strong>ValueError</strong> – If the convention string contains characters other
+    than {“X”, “Y”, and “Z”}.</p></li>
 </ul>
 </dd>
 </dl>
@@ -245,11 +260,16 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 <dt class="field-odd">Param</dt>
 <dd class="field-odd"><p>matrix: Rotation matrices as tensor of shape (…, 3, 3).</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Rotations given as a vector in axis angle form, as a
+tensor of shape (…, 3), where the magnitude is the angle
+turned anticlockwise in radians around the vector’s direction.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tf.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -278,8 +298,11 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing rotation matrices.</p></li>
-<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string containing a combination of three uppercase letters from {“X”, “Y”, and “Z”}.</p></li>
+<li><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing
+rotation matrices.</p></li>
+<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string
+containing a combination of three uppercase letters from
+{“X”, “Y”, and “Z”}.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -290,10 +313,14 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is does not have the shape (…, 3, 3).</p></li>
-<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not have the length 3.</p></li>
-<li><p><strong>ValueError</strong> – If the second character of the convention string is the same as the first or third.</p></li>
-<li><p><strong>ValueError</strong> – If the convention string contains characters other than {“X”, “Y”, and “Z”}.</p></li>
+<li><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is
+    does not have the shape (…, 3, 3).</p></li>
+<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not
+    have the length 3.</p></li>
+<li><p><strong>ValueError</strong> – If the second character of the convention string is
+    the same as the first or third.</p></li>
+<li><p><strong>ValueError</strong> – If the convention string contains characters other
+    than {“X”, “Y”, and “Z”}.</p></li>
 </ul>
 </dd>
 </dl>
@@ -322,16 +349,19 @@ quaternions with real part first that is a tensor of shape (…, 4).</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing
+rotation matrices.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tensor of shape (…, 4) representing quaternions with real part first.</p>
+<dd class="field-even"><p>A tensor of shape (…, 4) representing quaternions
+with real part first.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is does not have the shape (…, 3, 3).</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is
+    does not have the shape (…, 3, 3).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -352,10 +382,12 @@ Rotation Representations in Neural Networks. IEEE Conference on Computer
 Vision and Pattern Recognition, 2019. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1812.07035">http://arxiv.org/abs/1812.07035</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – Rotation matrices as tensor of shape (…, 3, 3).</p>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – Rotation matrices as tensor of shape (…,
+3, 3).</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>6D rotation representation as tensor of shape (…, 6).</p>
+<dd class="field-even"><p>6D rotation representation as tensor of shape (…,
+6).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -377,7 +409,8 @@ Vision and Pattern Recognition, 2019. Retrieved from <a class="reference externa
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4), with real part first</p></li>
+<li><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4),
+with real part first</p></li>
 <li><p><strong>point</strong> (<em>tf.Tensor</em>) – Points as tensor of shape (…, 3)</p></li>
 </ul>
 </dd>
@@ -406,10 +439,13 @@ representing its inverse.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4), with real part first, which must be versors (unit quaternions).</p>
+<dd class="field-odd"><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4),
+with real part first, which must be versors (unit
+quaternions).</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The inverse, a tensor of quaternions of shape (…, 4).</p>
+<dd class="field-even"><p>The inverse, a tensor of quaternions of shape (…,
+4).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -433,8 +469,10 @@ real part.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor of shape (…, 4).</p></li>
-<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor of shape (…, 4).</p></li>
+<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor
+of shape (…, 4).</p></li>
+<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor
+of shape (…, 4).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -460,8 +498,10 @@ real part.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor of shape (…, 4).</p></li>
-<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor of shape (…, 4).</p></li>
+<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor
+of shape (…, 4).</p></li>
+<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor
+of shape (…, 4).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -485,10 +525,16 @@ real part.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quaternions</strong> – Quaternions as tensor of shape (…, 4), with real part first.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quaternions</strong> – Quaternions as tensor of shape (…, 4), with real
+part first.</p></li>
+<li><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a
+tensor of shape (…, 3), where the magnitude is the angle
+turned anticlockwise in radians around the vector’s direction.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -511,10 +557,12 @@ real part.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 4) representing quaternions with real part first.</p>
+<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 4) representing
+quaternions with real part first.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation
+matrices.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -536,7 +584,8 @@ nonnegative real part.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<em>int</em>) – Number of quaternions to generate.</p></li>
-<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned tensor, defaults to tf.float32.</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned
+tensor, defaults to tf.float32.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -561,11 +610,13 @@ nonnegative real part.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<em>int</em>) – Number of rotation matrices to generate.</p></li>
-<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned tensor, defaults to tf.float32.</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned
+tensor, defaults to tf.float32.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Tensor of shape (n, 3, 3) representing rotation matrices.</p>
+<dd class="field-even"><p>Tensor of shape (n, 3, 3) representing rotation
+matrices.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -592,7 +643,8 @@ Rotation Representations in Neural Networks. IEEE Conference on Computer
 Vision and Pattern Recognition, 2019. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1812.07035">http://arxiv.org/abs/1812.07035</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>d6</strong> (<em>tf.Tensor</em>) – 6D rotation representation as tensor of shape (…, 6).</p>
+<dd class="field-odd"><p><strong>d6</strong> (<em>tf.Tensor</em>) – 6D rotation representation as tensor of shape
+(…, 6).</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Rotation matrices as tensor of shape (…, 3, 3).</p>
@@ -616,7 +668,8 @@ is non negative.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – Quaternions with real part first, as tensor of shape (…, 4).</p>
+<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – Quaternions with real part first, as
+tensor of shape (…, 4).</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Standardized quaternions as tensor of shape (…, 4).</p>
@@ -645,7 +698,10 @@ is non negative.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis
+angle form, as a tensor of shape (…, 3), where the
+magnitude is the angle turned anticlockwise in radians
+around the vector’s direction.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Rotation matrices as tensor of shape (…, 3, 3).</p>
@@ -670,10 +726,14 @@ is non negative.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+<dd class="field-odd"><p><strong>axis_angle</strong> (<em>tf.Tensor</em>) – Rotations given as a vector in axis
+angle form, as a tensor of shape (…, 3), where the
+magnitude is the angle turned anticlockwise in radians
+around the vector’s direction.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Quaternions as tensor of shape (…, 4), with real part first.</p>
+<dd class="field-even"><p>Quaternions as tensor of shape (…, 4), with real
+part first.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -714,22 +774,30 @@ is non negative.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>euler_angles</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3) representing euler angles.</p></li>
-<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string containing a combination of three uppercase letters from {“X”, “Y”, and “Z”}.</p></li>
+<li><p><strong>euler_angles</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3)
+representing euler angles.</p></li>
+<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string
+containing a combination of three uppercase letters from
+{“X”, “Y”, and “Z”}.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation
+matrices.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the shape of the input euler angles is invalid that is does not have the shape (…, 3).</p></li>
-<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not have the length 3.</p></li>
-<li><p><strong>ValueError</strong> – If the second character of the convention string is the same as the first or third.</p></li>
-<li><p><strong>ValueError</strong> – If the convention string contains characters other than {“X”, “Y”, and “Z”}.</p></li>
+<li><p><strong>ValueError</strong> – If the shape of the input euler angles is invalid
+    that is does not have the shape (…, 3).</p></li>
+<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not
+    have the length 3.</p></li>
+<li><p><strong>ValueError</strong> – If the second character of the convention string is
+    the same as the first or third.</p></li>
+<li><p><strong>ValueError</strong> – If the convention string contains characters other
+    than {“X”, “Y”, and “Z”}.</p></li>
 </ul>
 </dd>
 </dl>
@@ -757,11 +825,16 @@ is non negative.</p>
 <dt class="field-odd">Param</dt>
 <dd class="field-odd"><p>matrix: Rotation matrices as tensor of shape (…, 3, 3).</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Rotations given as a vector in axis angle form, as a
+tensor of shape (…, 3), where the magnitude is the angle
+turned anticlockwise in radians around the vector’s direction.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tf.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -790,8 +863,11 @@ is non negative.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing rotation matrices.</p></li>
-<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string containing a combination of three uppercase letters from {“X”, “Y”, and “Z”}.</p></li>
+<li><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing
+rotation matrices.</p></li>
+<li><p><strong>convention</strong> (<em>str</em>) – The euler angle convention. A string
+containing a combination of three uppercase letters from
+{“X”, “Y”, and “Z”}.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -802,10 +878,14 @@ is non negative.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is does not have the shape (…, 3, 3).</p></li>
-<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not have the length 3.</p></li>
-<li><p><strong>ValueError</strong> – If the second character of the convention string is the same as the first or third.</p></li>
-<li><p><strong>ValueError</strong> – If the convention string contains characters other than {“X”, “Y”, and “Z”}.</p></li>
+<li><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is
+    does not have the shape (…, 3, 3).</p></li>
+<li><p><strong>ValueError</strong> – If the convention string is invalid that is does not
+    have the length 3.</p></li>
+<li><p><strong>ValueError</strong> – If the second character of the convention string is
+    the same as the first or third.</p></li>
+<li><p><strong>ValueError</strong> – If the convention string contains characters other
+    than {“X”, “Y”, and “Z”}.</p></li>
 </ul>
 </dd>
 </dl>
@@ -834,16 +914,19 @@ is non negative.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 3, 3) representing
+rotation matrices.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tensor of shape (…, 4) representing quaternions with real part first.</p>
+<dd class="field-even"><p>A tensor of shape (…, 4) representing quaternions
+with real part first.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is does not have the shape (…, 3, 3).</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If the shape of the input matrix is invalid that is
+    does not have the shape (…, 3, 3).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -864,10 +947,12 @@ Rotation Representations in Neural Networks. IEEE Conference on Computer
 Vision and Pattern Recognition, 2019. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1812.07035">http://arxiv.org/abs/1812.07035</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – Rotation matrices as tensor of shape (…, 3, 3).</p>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>tf.Tensor</em>) – Rotation matrices as tensor of shape (…,
+3, 3).</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>6D rotation representation as tensor of shape (…, 6).</p>
+<dd class="field-even"><p>6D rotation representation as tensor of shape (…,
+6).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -889,7 +974,8 @@ Vision and Pattern Recognition, 2019. Retrieved from <a class="reference externa
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4), with real part first</p></li>
+<li><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4),
+with real part first</p></li>
 <li><p><strong>point</strong> (<em>tf.Tensor</em>) – Points as tensor of shape (…, 3)</p></li>
 </ul>
 </dd>
@@ -918,10 +1004,13 @@ representing its inverse.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4), with real part first, which must be versors (unit quaternions).</p>
+<dd class="field-odd"><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – Quaternions as tensor of shape (…, 4),
+with real part first, which must be versors (unit
+quaternions).</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The inverse, a tensor of quaternions of shape (…, 4).</p>
+<dd class="field-even"><p>The inverse, a tensor of quaternions of shape (…,
+4).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -945,8 +1034,10 @@ real part.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor of shape (…, 4).</p></li>
-<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor of shape (…, 4).</p></li>
+<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor
+of shape (…, 4).</p></li>
+<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor
+of shape (…, 4).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -972,8 +1063,10 @@ real part.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor of shape (…, 4).</p></li>
-<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor of shape (…, 4).</p></li>
+<li><p><strong>a</strong> (<em>tf.Tensor</em>) – First quaternion with real part first, as tensor
+of shape (…, 4).</p></li>
+<li><p><strong>b</strong> (<em>tf.Tensor</em>) – Second quaternion with real part first, as tensor
+of shape (…, 4).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -997,10 +1090,16 @@ real part.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quaternions</strong> – Quaternions as tensor of shape (…, 4), with real part first.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quaternions</strong> – Quaternions as tensor of shape (…, 4), with real
+part first.</p></li>
+<li><p><strong>quaternion</strong> (<em>tf.Tensor</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a tensor of shape (…, 3), where the magnitude is the angle turned anticlockwise in radians around the vector’s direction.</p>
+<dd class="field-even"><p>Rotations given as a vector in axis angle form, as a
+tensor of shape (…, 3), where the magnitude is the angle
+turned anticlockwise in radians around the vector’s direction.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -1023,10 +1122,12 @@ real part.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 4) representing quaternions with real part first.</p>
+<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – A tensor of shape (…, 4) representing
+quaternions with real part first.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation matrices.</p>
+<dd class="field-even"><p>A tensor of shape (…, 3, 3) representing rotation
+matrices.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -1048,7 +1149,8 @@ nonnegative real part.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<em>int</em>) – Number of quaternions to generate.</p></li>
-<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned tensor, defaults to tf.float32.</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned
+tensor, defaults to tf.float32.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1073,11 +1175,13 @@ nonnegative real part.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<em>int</em>) – Number of rotation matrices to generate.</p></li>
-<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned tensor, defaults to tf.float32.</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>tf.dtype</em><em>]</em><em>, </em><em>optional</em>) – Data type of the returned
+tensor, defaults to tf.float32.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Tensor of shape (n, 3, 3) representing rotation matrices.</p>
+<dd class="field-even"><p>Tensor of shape (n, 3, 3) representing rotation
+matrices.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>
@@ -1104,7 +1208,8 @@ Rotation Representations in Neural Networks. IEEE Conference on Computer
 Vision and Pattern Recognition, 2019. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1812.07035">http://arxiv.org/abs/1812.07035</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>d6</strong> (<em>tf.Tensor</em>) – 6D rotation representation as tensor of shape (…, 6).</p>
+<dd class="field-odd"><p><strong>d6</strong> (<em>tf.Tensor</em>) – 6D rotation representation as tensor of shape
+(…, 6).</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Rotation matrices as tensor of shape (…, 3, 3).</p>
@@ -1128,7 +1233,8 @@ is non negative.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – Quaternions with real part first, as tensor of shape (…, 4).</p>
+<dd class="field-odd"><p><strong>quaternions</strong> (<em>tf.Tensor</em>) – Quaternions with real part first, as
+tensor of shape (…, 4).</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Standardized quaternions as tensor of shape (…, 4).</p>
