@@ -45,6 +45,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">tensorflow3d_transforms package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tensorflow3d_transforms.rotation_conversions">tensorflow3d_transforms.rotation_conversions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tensorflow3d_transforms.so3_ops">tensorflow3d_transforms.so3_ops module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tensorflow3d_transforms">Module contents</a></li>
 </ul>
 </li>
@@ -673,6 +674,57 @@ tensor of shape (…, 4).</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Standardized quaternions as tensor of shape (…, 4).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tensorflow3d_transforms.so3_ops">
+<span id="tensorflow3d-transforms-so3-ops-module"></span><h2>tensorflow3d_transforms.so3_ops module<a class="headerlink" href="#module-tensorflow3d_transforms.so3_ops" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.so3_ops.acos_linear_extrapolation">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.so3_ops.</span></span><span class="sig-name descname"><span class="pre">acos_linear_extrapolation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">(-</span> <span class="pre">0.9999,</span> <span class="pre">0.9999)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/so3_ops.html#acos_linear_extrapolation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.so3_ops.acos_linear_extrapolation" title="Permalink to this definition"></a></dt>
+<dd><p>Implements <cite>arccos(x)</cite> which is linearly extrapolated outside <cite>x</cite>’s
+original domain of <cite>(-1, 1)</cite>. This allows for stable backpropagation in
+case <cite>x</cite> is not guaranteed to be strictly within <cite>(-1, 1)</cite>.</p>
+<p>More specifically:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">lower_bound</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">upper_bound</span><span class="p">:</span>
+    <span class="n">acos_linear_extrapolation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="c1"># 1st order Taylor approximation</span>
+    <span class="n">acos_linear_extrapolation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">)</span> <span class="o">+</span> <span class="n">dacos</span><span class="o">/</span><span class="n">dx</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>  <span class="c1"># x &gt;= upper_bound</span>
+    <span class="n">acos_linear_extrapolation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">)</span> <span class="o">+</span> <span class="n">dacos</span><span class="o">/</span><span class="n">dx</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">upper_bound</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">acos_linear_extrapolation</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(5,), dtype=float32, numpy=</span>
+<span class="c1"># array([0.00706984, 0.00706984, 0.00706984, 0.00706984, 0.00706984],</span>
+<span class="c1">#       dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>tf.Tensor</em>) – Input <cite>Tensor</cite>.</p></li>
+<li><p><strong>bounds</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – A float 2-tuple defining the
+region for the linear extrapolation of <cite>acos</cite>. The
+first/second element of <cite>bound</cite> describes the lower/upper
+bound that defines the lower/upper extrapolation region,
+i.e. the region where <cite>x &lt;= bound[0]</cite>/<cite>bound[1] &lt;= x</cite>. Note
+that all elements of <cite>bound</cite> have to be within (-1, 1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>acos_linear_extrapolation: <cite>Tensor</cite> containing the
+extrapolated <cite>arccos(x)</cite>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.Tensor</p>

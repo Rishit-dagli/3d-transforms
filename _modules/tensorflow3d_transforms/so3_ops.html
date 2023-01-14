@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tensorflow3d_transforms.so3_ops &mdash; TensorFlow3d Transforms 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/dark_mode_css/general.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/dark_mode_css/dark.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="../../_static/dark_mode_js/default_light.js"></script>
+        <script src="../../_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> TensorFlow3d Transforms
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tensorflow3d_transforms.html">tensorflow3d_transforms package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TensorFlow3d Transforms</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tensorflow3d_transforms.so3_ops</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tensorflow3d_transforms.so3_ops</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="n">DEFAULT_ACOS_BOUND</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1e-4</span>
+
+
+<div class="viewcode-block" id="acos_linear_extrapolation"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.so3_ops.acos_linear_extrapolation">[docs]</a><span class="k">def</span> <span class="nf">acos_linear_extrapolation</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">DEFAULT_ACOS_BOUND</span><span class="p">,</span> <span class="n">DEFAULT_ACOS_BOUND</span><span class="p">),</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Implements `arccos(x)` which is linearly extrapolated outside `x`&#39;s</span>
+<span class="sd">    original domain of `(-1, 1)`. This allows for stable backpropagation in</span>
+<span class="sd">    case `x` is not guaranteed to be strictly within `(-1, 1)`.</span>
+
+<span class="sd">    More specifically:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        bounds=(lower_bound, upper_bound)</span>
+<span class="sd">        if lower_bound &lt;= x &lt;= upper_bound:</span>
+<span class="sd">            acos_linear_extrapolation(x) = acos(x)</span>
+<span class="sd">        elif x &lt;= lower_bound: # 1st order Taylor approximation</span>
+<span class="sd">            acos_linear_extrapolation(x)</span>
+<span class="sd">                = acos(lower_bound) + dacos/dx(lower_bound) * (x - lower_bound)</span>
+<span class="sd">        else:  # x &gt;= upper_bound</span>
+<span class="sd">            acos_linear_extrapolation(x)</span>
+<span class="sd">                = acos(upper_bound) + dacos/dx(upper_bound) * (x - upper_bound)</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        x = tf.constant((1.0, 1.0, 1.0, 1.0, 1.0))</span>
+<span class="sd">        acos_linear_extrapolation(x=x)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(5,), dtype=float32, numpy=</span>
+<span class="sd">        # array([0.00706984, 0.00706984, 0.00706984, 0.00706984, 0.00706984],</span>
+<span class="sd">        #       dtype=float32)&gt;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (tf.Tensor): Input `Tensor`.</span>
+<span class="sd">        bounds (Tuple[float, float]): A float 2-tuple defining the</span>
+<span class="sd">            region for the linear extrapolation of `acos`. The</span>
+<span class="sd">            first/second element of `bound` describes the lower/upper</span>
+<span class="sd">            bound that defines the lower/upper extrapolation region,</span>
+<span class="sd">            i.e. the region where `x &lt;= bound[0]`/`bound[1] &lt;= x`. Note</span>
+<span class="sd">            that all elements of `bound` have to be within (-1, 1).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: acos_linear_extrapolation: `Tensor` containing the</span>
+<span class="sd">        extrapolated `arccos(x)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">bounds</span>
+
+    <span class="k">if</span> <span class="n">lower_bound</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;lower bound has to be smaller or equal to upper bound.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lower_bound</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="ow">or</span> <span class="n">upper_bound</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Both lower bound and upper bound have to be within (-1, 1).&quot;</span><span class="p">)</span>
+
+    <span class="n">acos_extrap</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">x_upper</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">upper_bound</span>
+    <span class="n">x_lower</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">lower_bound</span>
+    <span class="n">x_mid</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">x_upper</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">x_lower</span><span class="p">)</span>
+
+    <span class="n">acos_extrap</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x_mid</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">acos_extrap</span><span class="p">)</span>
+    <span class="n">acos_extrap</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">x_upper</span><span class="p">,</span> <span class="n">_acos_linear_approximation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">),</span> <span class="n">acos_extrap</span>
+    <span class="p">)</span>
+    <span class="n">acos_extrap</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">x_lower</span><span class="p">,</span> <span class="n">_acos_linear_approximation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">),</span> <span class="n">acos_extrap</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">acos_extrap</span></div>
+
+
+<span class="k">def</span> <span class="nf">_acos_linear_approximation</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the 1st order Taylor expansion of `arccos(x)` around `x0`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">*</span> <span class="n">_dacos_dx</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_dacos_dx</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the derivative of `arccos(x)` w.r.t. `x`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Rishit Dagli.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
