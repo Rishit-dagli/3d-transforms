@@ -77,12 +77,10 @@ def acos_linear_extrapolation(
 
 
 def _acos_linear_approximation(x: tf.Tensor, x0: float) -> tf.Tensor:
-    """Calculates the 1st order Taylor expansion of `arccos(x)` around `x0`.
-    """
+    """Calculates the 1st order Taylor expansion of `arccos(x)` around `x0`."""
     return (x - x0) * _dacos_dx(x0) + math.acos(x0)
 
 
 def _dacos_dx(x: float) -> float:
-    """Calculates the derivative of `arccos(x)` w.r.t. `x`.
-    """
+    """Calculates the derivative of `arccos(x)` w.r.t. `x`."""
     return (-1.0) / math.sqrt(1.0 - x * x)
