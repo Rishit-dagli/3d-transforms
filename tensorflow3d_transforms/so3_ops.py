@@ -239,3 +239,50 @@ def so3_rotation_angle(
             return acos_linear_extrapolation(phi_cos, (-bound, bound))
         else:
             return tf.math.acos(phi_cos)
+
+def hat(v: tf.Tensor) -> tf.Tensor:
+    """
+    Computes the hat operator of a batch of 3D vector.
+
+    Example:
+
+    .. code-block:: python
+        
+        v = tf.constant([[1., 1., 1.], [1., 1., 1.]])
+        hat(v)
+        # <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=
+        # array([[[ 0., -1.,  1.],
+        #         [ 1.,  0., -1.],
+        #         [-1.,  1.,  0.]],
+
+        #        [[ 0., -1.,  1.],
+        #         [ 1.,  0., -1.],
+        #         [-1.,  1.,  0.]]], dtype=float32)>
+
+    Args:
+        v (tf.Tensor): Batch of 3D vectors of shape `(minibatch, 3)`.
+    Returns:
+        Batch of skew-symmetric matrices of shape
+        `(minibatch, 3 , 3)` where each matrix is of the form:
+            `[    0  -v_z   v_y ]
+             [  v_z     0  -v_x ]
+             [ -v_y   v_x     0 ]`
+    Raises:
+        ValueError if `v` is of incorrect shape.
+    """
+    N, dim = v.shape
+    if dim != 3:
+        raise ValueError("Input vectors have to be 3-dimensional.")
+    
+    h = tf.Variable(tf.zeros((N, 3, 3), dtype=v.dtype))
+
+    x, y, z = tf.unstack(v, axis=1)
+    
+    h[:, 0, 1].assign(-z)
+    h[:, 0, 2].assign(y)
+    h[:, 1, 0].assign(z)
+    h[:, 1, 2].assign(-x)
+    h[:, 2, 0].assign(-y)
+    h[:, 2, 1].assign(x)
+
+    return tf.convert_to_tensor(h)
