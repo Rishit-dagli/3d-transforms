@@ -77,6 +77,97 @@
 <span class="n">DEFAULT_ACOS_BOUND</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1e-4</span>
 
 
+<span class="k">def</span> <span class="nf">acos_linear_extrapolation</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">DEFAULT_ACOS_BOUND</span><span class="p">,</span> <span class="n">DEFAULT_ACOS_BOUND</span><span class="p">),</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Implements `arccos(x)` which is linearly extrapolated outside `x`&#39;s</span>
+<span class="sd">    original domain of `(-1, 1)`. This allows for stable backpropagation in</span>
+<span class="sd">    case `x` is not guaranteed to be strictly within `(-1, 1)`.</span>
+
+<span class="sd">    More specifically:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        bounds=(lower_bound, upper_bound)</span>
+<span class="sd">        if lower_bound &lt;= x &lt;= upper_bound:</span>
+<span class="sd">            acos_linear_extrapolation(x) = acos(x)</span>
+<span class="sd">        elif x &lt;= lower_bound: # 1st order Taylor approximation</span>
+<span class="sd">            acos_linear_extrapolation(x)</span>
+<span class="sd">                = acos(lower_bound) + dacos/dx(lower_bound) * (x - lower_bound)</span>
+<span class="sd">        else:  # x &gt;= upper_bound</span>
+<span class="sd">            acos_linear_extrapolation(x)</span>
+<span class="sd">                = acos(upper_bound) + dacos/dx(upper_bound) * (x - upper_bound)</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        x = tf.constant((1.0, 1.0, 1.0, 1.0, 1.0))</span>
+<span class="sd">        acos_linear_extrapolation(x=x)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(5,), dtype=float32, numpy=</span>
+<span class="sd">        # array([0.00706984, 0.00706984, 0.00706984, 0.00706984, 0.00706984],</span>
+<span class="sd">        #       dtype=float32)&gt;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (tf.Tensor): Input `Tensor`.</span>
+<span class="sd">        bounds (Tuple[float, float]): A float 2-tuple defining the</span>
+<span class="sd">            region for the linear extrapolation of `acos`. The</span>
+<span class="sd">            first/second element of `bound` describes the lower/upper</span>
+<span class="sd">            bound that defines the lower/upper extrapolation region,</span>
+<span class="sd">            i.e. the region where `x &lt;= bound[0]`/`bound[1] &lt;= x`. Note</span>
+<span class="sd">            that all elements of `bound` have to be within (-1, 1).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: acos_linear_extrapolation: `Tensor` containing the</span>
+<span class="sd">        extrapolated `arccos(x)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">bounds</span>
+
+    <span class="k">if</span> <span class="n">lower_bound</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;lower bound has to be smaller or equal to upper bound.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lower_bound</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="ow">or</span> <span class="n">upper_bound</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Both lower bound and upper bound have to be within (-1, 1).&quot;</span><span class="p">)</span>
+
+    <span class="n">acos_extrap</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">x_upper</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">upper_bound</span>
+    <span class="n">x_lower</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">lower_bound</span>
+    <span class="n">x_mid</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">x_upper</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">x_lower</span><span class="p">)</span>
+
+    <span class="n">acos_extrap</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x_mid</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">acos_extrap</span><span class="p">)</span>
+    <span class="n">acos_extrap</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">x_upper</span><span class="p">,</span> <span class="n">_acos_linear_approximation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">),</span> <span class="n">acos_extrap</span>
+    <span class="p">)</span>
+    <span class="n">acos_extrap</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">x_lower</span><span class="p">,</span> <span class="n">_acos_linear_approximation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">),</span> <span class="n">acos_extrap</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">acos_extrap</span>
+
+
+<span class="k">def</span> <span class="nf">_acos_linear_approximation</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the 1st order Taylor expansion of `arccos(x)` around `x0`.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">*</span> <span class="n">_dacos_dx</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_dacos_dx</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the derivative of `arccos(x)` w.r.t.</span>
+
+<span class="sd">    `x`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="n">DEFAULT_ACOS_BOUND</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1e-4</span>
+
+
 <div class="viewcode-block" id="acos_linear_extrapolation"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.so3_ops.acos_linear_extrapolation">[docs]</a><span class="k">def</span> <span class="nf">acos_linear_extrapolation</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">bounds</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">DEFAULT_ACOS_BOUND</span><span class="p">,</span> <span class="n">DEFAULT_ACOS_BOUND</span><span class="p">),</span>
@@ -153,8 +244,64 @@
 
 
 <span class="k">def</span> <span class="nf">_dacos_dx</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Calculates the derivative of `arccos(x)` w.r.t. `x`.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the derivative of `arccos(x)` w.r.t.</span>
+
+<span class="sd">    `x`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="so3_rotation_angle"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.so3_ops.so3_rotation_angle">[docs]</a><span class="k">def</span> <span class="nf">so3_rotation_angle</span><span class="p">(</span>
+    <span class="n">R</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
+    <span class="n">cos_angle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">cos_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculates angles (in radians) of a batch of rotation matrices `R` with.</span>
+
+<span class="sd">    `angle = acos(0.5 * (Trace(R)-1))`. The trace of the</span>
+<span class="sd">    input matrices is checked to be in the valid range `[-1-eps,3+eps]`.</span>
+<span class="sd">    The `eps` argument is a small constant that allows for small errors</span>
+<span class="sd">    caused by limited machine precision.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        R (tf.Tensor): Batch of rotation matrices of shape `(minibatch, 3, 3)`.</span>
+<span class="sd">        eps (float): Tolerance for the valid trace check.</span>
+<span class="sd">        cos_angle (bool): If==True return cosine of the rotation angles rather than</span>
+<span class="sd">            the angle itself. This can avoid the unstable</span>
+<span class="sd">            calculation of `acos`.</span>
+<span class="sd">        cos_bound (float): Clamps the cosine of the rotation angle to</span>
+<span class="sd">            [-1 + cos_bound, 1 - cos_bound] to avoid non-finite outputs/gradients</span>
+<span class="sd">            of the `acos` call. Note that the non-finite outputs/gradients</span>
+<span class="sd">            are returned when the angle is requested (i.e. `cos_angle==False`)</span>
+<span class="sd">            and the rotation angle is close to 0 or π.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Corresponding rotation angles of shape `(minibatch,)`.</span>
+<span class="sd">        If `cos_angle==True`, returns the cosine of the angles.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError if `R` is of incorrect shape.</span>
+<span class="sd">        ValueError if `R` has an unexpected trace.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="n">dim1</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">dim2</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input has to be a batch of 3x3 Tensors.&quot;</span><span class="p">)</span>
+
+    <span class="n">rot_trace</span> <span class="o">=</span> <span class="n">R</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_any</span><span class="p">(</span><span class="n">rot_trace</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_any</span><span class="p">(</span>
+        <span class="n">rot_trace</span> <span class="o">&gt;</span> <span class="mf">3.0</span> <span class="o">+</span> <span class="n">eps</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A matrix has trace outside valid range [-1-eps,3+eps].&quot;</span><span class="p">)</span>
+
+    <span class="n">phi_cos</span> <span class="o">=</span> <span class="p">(</span><span class="n">rot_trace</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+    <span class="k">if</span> <span class="n">cos_angle</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">phi_cos</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cos_bound</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">bound</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">cos_bound</span>
+            <span class="k">return</span> <span class="n">acos_linear_extrapolation</span><span class="p">(</span><span class="n">phi_cos</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">bound</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">phi_cos</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

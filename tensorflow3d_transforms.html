@@ -732,6 +732,45 @@ extrapolated <cite>arccos(x)</cite>.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.so3_ops.so3_rotation_angle">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.so3_ops.</span></span><span class="sig-name descname"><span class="pre">so3_rotation_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cos_angle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cos_bound</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/so3_ops.html#so3_rotation_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.so3_ops.so3_rotation_angle" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates angles (in radians) of a batch of rotation matrices <cite>R</cite> with.</p>
+<p><cite>angle = acos(0.5 * (Trace(R)-1))</cite>. The trace of the
+input matrices is checked to be in the valid range <cite>[-1-eps,3+eps]</cite>.
+The <cite>eps</cite> argument is a small constant that allows for small errors
+caused by limited machine precision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>tf.Tensor</em>) – Batch of rotation matrices of shape <cite>(minibatch, 3, 3)</cite>.</p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – Tolerance for the valid trace check.</p></li>
+<li><p><strong>cos_angle</strong> (<em>bool</em>) – If==True return cosine of the rotation angles rather than
+the angle itself. This can avoid the unstable
+calculation of <cite>acos</cite>.</p></li>
+<li><p><strong>cos_bound</strong> (<em>float</em>) – Clamps the cosine of the rotation angle to
+[-1 + cos_bound, 1 - cos_bound] to avoid non-finite outputs/gradients
+of the <cite>acos</cite> call. Note that the non-finite outputs/gradients
+are returned when the angle is requested (i.e. <cite>cos_angle==False</cite>)
+and the rotation angle is close to 0 or π.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Corresponding rotation angles of shape <cite>(minibatch,)</cite>.
+If <cite>cos_angle==True</cite>, returns the cosine of the angles.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError if R is of incorrect shape.</strong> – </p></li>
+<li><p><strong>ValueError if R has an unexpected trace.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tensorflow3d_transforms">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tensorflow3d_transforms" title="Permalink to this headline"></a></h2>
