@@ -240,14 +240,14 @@ def so3_rotation_angle(
         else:
             return tf.math.acos(phi_cos)
 
+
 def hat(v: tf.Tensor) -> tf.Tensor:
-    """
-    Computes the hat operator of a batch of 3D vector.
+    """Computes the hat operator of a batch of 3D vector.
 
     Example:
 
     .. code-block:: python
-        
+
         v = tf.constant([[1., 1., 1.], [1., 1., 1.]])
         hat(v)
         # <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=
@@ -273,11 +273,11 @@ def hat(v: tf.Tensor) -> tf.Tensor:
     N, dim = v.shape
     if dim != 3:
         raise ValueError("Input vectors have to be 3-dimensional.")
-    
+
     h = tf.Variable(tf.zeros((N, 3, 3), dtype=v.dtype))
 
     x, y, z = tf.unstack(v, axis=1)
-    
+
     h[:, 0, 1].assign(-z)
     h[:, 0, 2].assign(y)
     h[:, 1, 0].assign(z)
@@ -286,3 +286,51 @@ def hat(v: tf.Tensor) -> tf.Tensor:
     h[:, 2, 1].assign(x)
 
     return tf.convert_to_tensor(h)
+
+
+def hat_inverse(h: tf.Tensor) -> tf.Tensor:
+    """Computes the inverse hat operator of a batch of skew-symmetric matrices.
+
+    Example:
+
+    .. code-block:: python
+
+        h = tf.constant([[[ 0., -1.,  1.],
+            [ 1.,  0., -1.],
+            [-1.,  1.,  0.]],
+        [[ 0., -1.,  1.],
+            [ 1.,  0., -1.],
+            [-1.,  1.,  0.]]])
+        hat_inverse(h)
+        # <tf.Tensor: shape=(2, 3), dtype=float32, numpy=
+        # array([[1., 1., 1.],
+        #        [1., 1., 1.]], dtype=float32)>
+
+    Args:
+        h (tf.Tensor): Batch of skew-symmetric matrices of shape
+            `(minibatch, 3, 3)`.
+
+    Returns:
+        Batch of 3D vectors of shape `(minibatch, 3)` where each vector is of the form:
+
+    Raises:
+        ValueError if `h` is of incorrect shape.
+        ValueError if `h` is not skew-symmetric.
+    """
+    N, dim1, dim2 = h.shape
+    if dim1 != 3 or dim2 != 3:
+        raise ValueError("Input has to be a batch of 3x3 Tensors.")
+
+    ss_diff = tf.reduce_max(tf.abs(h + tf.transpose(h, perm=[0, 2, 1])))
+
+    HAT_INV_SKEW_SYMMETRIC_TOL = 1e-5
+    if float(ss_diff) > HAT_INV_SKEW_SYMMETRIC_TOL:
+        raise ValueError("One of input matrices is not skew-symmetric.")
+
+    x = h[:, 2, 1]
+    y = h[:, 0, 2]
+    z = h[:, 1, 0]
+
+    v = tf.stack((x, y, z), axis=1)
+
+    return v
