@@ -88,6 +88,7 @@ def _dacos_dx(x: float) -> float:
     """
     return (-1.0) / math.sqrt(1.0 - x * x)
 
+
 import math
 from typing import Tuple
 
@@ -178,6 +179,7 @@ def _dacos_dx(x: float) -> float:
     """
     return (-1.0) / math.sqrt(1.0 - x * x)
 
+
 def so3_rotation_angle(
     R: tf.Tensor,
     eps: float = 1e-4,
@@ -214,7 +216,9 @@ def so3_rotation_angle(
         raise ValueError("Input has to be a batch of 3x3 Tensors.")
 
     rot_trace = R[:, 0, 0] + R[:, 1, 1] + R[:, 2, 2]
-    if tf.math.reduce_any(rot_trace < -1.0 - eps) or tf.math.reduce_any(rot_trace > 3.0 + eps):
+    if tf.math.reduce_any(rot_trace < -1.0 - eps) or tf.math.reduce_any(
+        rot_trace > 3.0 + eps
+    ):
         raise ValueError("A matrix has trace outside valid range [-1-eps,3+eps].")
 
     phi_cos = (rot_trace - 1.0) * 0.5
