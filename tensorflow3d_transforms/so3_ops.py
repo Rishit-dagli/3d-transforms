@@ -193,6 +193,14 @@ def so3_rotation_angle(
     The `eps` argument is a small constant that allows for small errors
     caused by limited machine precision.
 
+    Example:
+
+    .. code-block:: python
+
+        v = tf.constant([[[1., 1., 1.], [1., 1., 1.], [1., 1., 1.]]])
+        so3_rotation_angle(v)
+        # <tf.Tensor: shape=(1,), dtype=float32, numpy=array([0.00706984], dtype=float32)>
+
     Args:
         R (tf.Tensor): Batch of rotation matrices of shape `(minibatch, 3, 3)`.
         eps (float): Tolerance for the valid trace check.
