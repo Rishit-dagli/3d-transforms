@@ -73,7 +73,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for tensorflow3d_transforms.so3_ops</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span></span><span class="sd">&quot;&quot;&quot;The SO(3) group, also known as the special orthogonal group in three</span>
+<span class="sd">dimensions, is a mathematical group that consists of all rotations in three-</span>
+<span class="sd">dimensional space.</span>
+
+<span class="sd">It&#39;s the collection of rotations of three-dimensional space that preserve one</span>
+<span class="sd">distinguished point, the origin. It is important in 3D geometry because it</span>
+<span class="sd">represents the set of all possible rotations that can be performed in three-</span>
+<span class="sd">dimensional space and operations on it are pretty helpful; thus the existence</span>
+<span class="sd">of this module.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
