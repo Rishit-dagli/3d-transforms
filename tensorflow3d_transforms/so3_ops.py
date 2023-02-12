@@ -355,9 +355,9 @@ def _so3_exp_map(
     #         [[ 0.22629565, -0.18300793,  0.95671225],
     #          [ 0.95671225,  0.22629565, -0.18300793],
     #          [-0.18300793,  0.95671225,  0.22629565]]], dtype=float32)>,
-    # 
+    #
     #  <tf.Tensor: shape=(2,), dtype=float32, numpy=array([1.7320508, 1.7320508], dtype=float32)>,
-    # 
+    #
     #  <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=
     #  array([[[ 0., -1.,  1.],
     #          [ 1.,  0., -1.],
@@ -365,7 +365,7 @@ def _so3_exp_map(
     #         [[ 0., -1.,  1.],
     #          [ 1.,  0., -1.],
     #          [-1.,  1.,  0.]]], dtype=float32)>,
-    # 
+    #
     #  <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=
     #  array([[[-2.,  1.,  1.],
     #          [ 1., -2.,  1.],
@@ -396,7 +396,7 @@ def _so3_exp_map(
         raise ValueError("Input tensor shape has to be Nx3.")
 
     nrms = tf.reduce_sum(log_rot * log_rot, axis=1)
-    rot_angles = tf.clip_by_value(nrms, eps, tf.math.reduce_max(nrms))**0.5
+    rot_angles = tf.clip_by_value(nrms, eps, tf.math.reduce_max(nrms)) ** 0.5
     rot_angles_inv = 1.0 / rot_angles
     fac1 = rot_angles_inv * tf.math.sin(rot_angles)
     fac2 = rot_angles_inv * rot_angles_inv * (1.0 - tf.math.cos(rot_angles))
@@ -404,7 +404,11 @@ def _so3_exp_map(
     skews_square = tf.matmul(skews, skews)
 
     eye_3 = tf.eye(3, dtype=log_rot.dtype)
-    R = fac1[:, tf.newaxis, tf.newaxis] * skews + fac2[:, tf.newaxis, tf.newaxis] * skews_square + tf.tile(tf.expand_dims(eye_3, 0), [tf.shape(log_rot)[0], 1, 1])
+    R = (
+        fac1[:, tf.newaxis, tf.newaxis] * skews
+        + fac2[:, tf.newaxis, tf.newaxis] * skews_square
+        + tf.tile(tf.expand_dims(eye_3, 0), [tf.shape(log_rot)[0], 1, 1])
+    )
 
     return R, rot_angles, skews, skews_square
 
@@ -488,9 +492,13 @@ def so3_log_map(
     phi_sin = tf.math.sin(phi)
     phi_factor = tf.zeros_like(phi)
     ok_denom = tf.math.abs(phi_sin) > (0.5 * eps)
-    phi_factor = tf.where(ok_denom, phi / (2.0 * phi_sin), 0.5 + (phi ** 2) * (1.0 / 12))
+    phi_factor = tf.where(
+        ok_denom, phi / (2.0 * phi_sin), 0.5 + (phi**2) * (1.0 / 12)
+    )
 
-    log_rot_hat = phi_factor[:, tf.newaxis, tf.newaxis] * (R - tf.transpose(R, [0, 2, 1]))
+    log_rot_hat = phi_factor[:, tf.newaxis, tf.newaxis] * (
+        R - tf.transpose(R, [0, 2, 1])
+    )
 
     log_rot = hat_inverse(log_rot_hat)
 
