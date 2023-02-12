@@ -131,7 +131,7 @@ def so3_rotation_angle(
             [-1 + cos_bound, 1 - cos_bound] to avoid non-finite outputs/gradients
             of the `acos` call. Note that the non-finite outputs/gradients
             are returned when the angle is requested (i.e. `cos_angle==False`)
-            and the rotation angle is close to 0 or π.
+            and the rotation angle is close to 0 or :math:`\pi`.
     Returns:
         tf.Tensor: Corresponding rotation angles of shape `(minibatch,)`.
         If `cos_angle==True`, returns the cosine of the angles.
