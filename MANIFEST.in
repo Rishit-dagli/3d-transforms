@@ -1,0 +1,3 @@
+include LICENSE
+recursive-include tensorflow3d_transforms *.py
+include README.md

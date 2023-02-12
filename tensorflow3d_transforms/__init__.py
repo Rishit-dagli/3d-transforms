@@ -1,3 +1,5 @@
+from __init__ import __version__
+
 from .rotation_conversions import (
     axis_angle_to_matrix,
     axis_angle_to_quaternion,
