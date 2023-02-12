@@ -33,6 +33,7 @@ Quick Links
    :maxdepth: 2
    :caption: Contents:
 
+   Home <self>
    quick_start
    tensorflow3d_transforms
 
