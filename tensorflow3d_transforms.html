@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> TensorFlow3d Transforms
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            TensorFlow3d Transforms
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -64,7 +68,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">tensorflow3d_transforms package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/tensorflow3d_transforms.rst.txt" rel="nofollow"> View page source</a>
@@ -803,6 +807,131 @@ extrapolated <cite>arccos(x)</cite>.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError if h is of incorrect shape.</strong> – </p></li>
 <li><p><strong>ValueError if h is not skew-symmetric.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.so3_ops.so3_exp_map">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.so3_ops.</span></span><span class="sig-name descname"><span class="pre">so3_exp_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_rot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/so3_ops.html#so3_exp_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.so3_ops.so3_exp_map" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the exponential map of a batch of 3D rotation vectors.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">log_rot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(((</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">),(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)))</span>
+<span class="n">so3_exp_map</span><span class="p">(</span><span class="n">log_rot</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=</span>
+<span class="c1"># array([[[ 0.22629565, -0.18300793,  0.95671225],</span>
+<span class="c1">#         [ 0.95671225,  0.22629565, -0.18300793],</span>
+<span class="c1">#         [-0.18300793,  0.95671225,  0.22629565]],</span>
+<span class="c1">#        [[ 0.22629565, -0.18300793,  0.95671225],</span>
+<span class="c1">#         [ 0.95671225,  0.22629565, -0.18300793],</span>
+<span class="c1">#         [-0.18300793,  0.95671225,  0.22629565]]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_rot</strong> (<em>tf.Tensor</em>) – Batch of 3D rotation vectors of shape
+<cite>(minibatch, 3)</cite>.</p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – Threshold for the norm of the rotation vector.
+If the norm is below this threshold, the exponential map
+is approximated with the first order Taylor expansion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Batch of rotation matrices of shape</dt><dd><p><cite>(minibatch, 3, 3)</cite>.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError if log_rot is of incorrect shape.</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.so3_ops.so3_log_map">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.so3_ops.</span></span><span class="sig-name descname"><span class="pre">so3_log_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cos_bound</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/so3_ops.html#so3_log_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.so3_ops.so3_log_map" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a batch of 3x3 rotation matrices <cite>R</cite> to a batch of 3-dimensional
+matrix logarithms of rotation matrices The conversion has a singularity
+around <cite>(R=I)</cite> which is handled by clamping controlled with the <cite>eps</cite> and
+<cite>cos_bound</cite> arguments.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]]])</span>
+<span class="n">so3_log_map</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(1, 3), dtype=float32, numpy=array([[0., 0., 0.]], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> – batch of rotation matrices of shape <cite>(minibatch, 3, 3)</cite>.</p></li>
+<li><p><strong>eps</strong> – A float constant handling the conversion singularity.</p></li>
+<li><p><strong>cos_bound</strong> – Clamps the cosine of the rotation angle to
+[-1 + cos_bound, 1 - cos_bound] to avoid non-finite outputs/gradients
+of the <cite>acos</cite> call when computing <cite>so3_rotation_angle</cite>.
+Note that the non-finite outputs/gradients are returned when
+the rotation angle is close to 0 or π.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Batch of logarithms of input rotation matrices
+of shape <cite>(minibatch, 3)</cite>.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError if R is of incorrect shape.</strong> – </p></li>
+<li><p><strong>ValueError if R has an unexpected trace.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tensorflow3d_transforms.so3_ops.so3_relative_angle">
+<span class="sig-prename descclassname"><span class="pre">tensorflow3d_transforms.so3_ops.</span></span><span class="sig-name descname"><span class="pre">so3_relative_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R1</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cos_angle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cos_bound</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></span><a class="reference internal" href="_modules/tensorflow3d_transforms/so3_ops.html#so3_relative_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tensorflow3d_transforms.so3_ops.so3_relative_angle" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the relative angle (in radians) between pairs of.</p>
+<p>rotation matrices <cite>R1</cite> and <cite>R2</cite> with <cite>angle = acos(0.5 * (Trace(R1 R2^T)-1))</cite></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This corresponds to a geodesic distance on the 3D manifold of rotation
+matrices.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]]])</span>
+<span class="n">so3_relative_angle</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e2</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(1,), dtype=float32, numpy=array([-212.13028], dtype=float32)&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R1</strong> – Batch of rotation matrices of shape <cite>(minibatch, 3, 3)</cite>.</p></li>
+<li><p><strong>R2</strong> – Batch of rotation matrices of shape <cite>(minibatch, 3, 3)</cite>.</p></li>
+<li><p><strong>cos_angle</strong> – If==True return cosine of the relative angle rather than
+the angle itself. This can avoid the unstable calculation of <cite>acos</cite>.</p></li>
+<li><p><strong>cos_bound</strong> – Clamps the cosine of the relative rotation angle to
+[-1 + cos_bound, 1 - cos_bound] to avoid non-finite outputs/gradients
+of the <cite>acos</cite> call. Note that the non-finite outputs/gradients
+are returned when the angle is requested (i.e. <cite>cos_angle==False</cite>)
+and the rotation angle is close to 0 or π.</p></li>
+<li><p><strong>eps</strong> – Tolerance for the valid trace check of the relative rotation matrix
+in <cite>so3_rotation_angle</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Corresponding rotation angles of shape <cite>(minibatch,)</cite>.
+If <cite>cos_angle==True</cite>, returns the cosine of the angles.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError if R1</strong><strong> or </strong><strong>R2 is of incorrect shape.</strong> – </p></li>
+<li><p><strong>ValueError if R1</strong><strong> or </strong><strong>R2 has an unexpected trace.</strong> – </p></li>
 </ul>
 </dd>
 </dl>

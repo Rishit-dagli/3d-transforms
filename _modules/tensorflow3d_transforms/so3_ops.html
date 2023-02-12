@@ -29,11 +29,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> TensorFlow3d Transforms
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            TensorFlow3d Transforms
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
       <li class="breadcrumb-item active">tensorflow3d_transforms.so3_ops</li>
       <li class="wy-breadcrumbs-aside">
@@ -405,6 +409,215 @@
     <span class="n">v</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">v</span></div>
+
+
+<span class="k">def</span> <span class="nf">_so3_exp_map</span><span class="p">(</span>
+    <span class="n">log_rot</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Computes the exponential map of a batch of 3D rotation vectors and</span>
+<span class="sd">    returns the intermediate tensors as well.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">    log_rot = tf.constant(((1.,1.,1.),(1.,1.,1.)))</span>
+<span class="sd">    _so3_exp_map(log_rot)</span>
+<span class="sd">    # (&lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=</span>
+<span class="sd">    #  array([[[ 0.22629565, -0.18300793,  0.95671225],</span>
+<span class="sd">    #          [ 0.95671225,  0.22629565, -0.18300793],</span>
+<span class="sd">    #          [-0.18300793,  0.95671225,  0.22629565]],</span>
+<span class="sd">    #         [[ 0.22629565, -0.18300793,  0.95671225],</span>
+<span class="sd">    #          [ 0.95671225,  0.22629565, -0.18300793],</span>
+<span class="sd">    #          [-0.18300793,  0.95671225,  0.22629565]]], dtype=float32)&gt;,</span>
+<span class="sd">    # </span>
+<span class="sd">    #  &lt;tf.Tensor: shape=(2,), dtype=float32, numpy=array([1.7320508, 1.7320508], dtype=float32)&gt;,</span>
+<span class="sd">    # </span>
+<span class="sd">    #  &lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=</span>
+<span class="sd">    #  array([[[ 0., -1.,  1.],</span>
+<span class="sd">    #          [ 1.,  0., -1.],</span>
+<span class="sd">    #          [-1.,  1.,  0.]],</span>
+<span class="sd">    #         [[ 0., -1.,  1.],</span>
+<span class="sd">    #          [ 1.,  0., -1.],</span>
+<span class="sd">    #          [-1.,  1.,  0.]]], dtype=float32)&gt;,</span>
+<span class="sd">    # </span>
+<span class="sd">    #  &lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=</span>
+<span class="sd">    #  array([[[-2.,  1.,  1.],</span>
+<span class="sd">    #          [ 1., -2.,  1.],</span>
+<span class="sd">    #          [ 1.,  1., -2.]],</span>
+<span class="sd">    #         [[-2.,  1.,  1.],</span>
+<span class="sd">    #          [ 1., -2.,  1.],</span>
+<span class="sd">    #          [ 1.,  1., -2.]]], dtype=float32)&gt;)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        log_rot (tf.Tensor): Batch of 3D rotation vectors of shape</span>
+<span class="sd">            `(minibatch, 3)`.</span>
+<span class="sd">        eps (float): Threshold for the norm of the rotation vector.</span>
+<span class="sd">            If the norm is below this threshold, the exponential map</span>
+<span class="sd">            is approximated with the first order Taylor expansion.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple of tf.Tensor: Batch of rotation matrices of shape</span>
+<span class="sd">            `(minibatch, 3, 3)`, batch of rotation angles of shape</span>
+<span class="sd">            `(minibatch,)`, batch of rotation vectors of shape</span>
+<span class="sd">            `(minibatch, 3)`, batch of rotation vector norms of shape</span>
+<span class="sd">            `(minibatch,)`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError if `log_rot` is of incorrect shape.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">log_rot</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input tensor shape has to be Nx3.&quot;</span><span class="p">)</span>
+
+    <span class="n">nrms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">log_rot</span> <span class="o">*</span> <span class="n">log_rot</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rot_angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">nrms</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">nrms</span><span class="p">))</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="n">rot_angles_inv</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">rot_angles</span>
+    <span class="n">fac1</span> <span class="o">=</span> <span class="n">rot_angles_inv</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rot_angles</span><span class="p">)</span>
+    <span class="n">fac2</span> <span class="o">=</span> <span class="n">rot_angles_inv</span> <span class="o">*</span> <span class="n">rot_angles_inv</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rot_angles</span><span class="p">))</span>
+    <span class="n">skews</span> <span class="o">=</span> <span class="n">hat</span><span class="p">(</span><span class="n">log_rot</span><span class="p">)</span>
+    <span class="n">skews_square</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">skews</span><span class="p">,</span> <span class="n">skews</span><span class="p">)</span>
+
+    <span class="n">eye_3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">log_rot</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">fac1</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">skews</span> <span class="o">+</span> <span class="n">fac2</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">skews_square</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">eye_3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">log_rot</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">R</span><span class="p">,</span> <span class="n">rot_angles</span><span class="p">,</span> <span class="n">skews</span><span class="p">,</span> <span class="n">skews_square</span>
+
+
+<div class="viewcode-block" id="so3_exp_map"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.so3_ops.so3_exp_map">[docs]</a><span class="k">def</span> <span class="nf">so3_exp_map</span><span class="p">(</span><span class="n">log_rot</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Computes the exponential map of a batch of 3D rotation vectors.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        log_rot = tf.constant(((1.,1.,1.),(1.,1.,1.)))</span>
+<span class="sd">        so3_exp_map(log_rot)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=</span>
+<span class="sd">        # array([[[ 0.22629565, -0.18300793,  0.95671225],</span>
+<span class="sd">        #         [ 0.95671225,  0.22629565, -0.18300793],</span>
+<span class="sd">        #         [-0.18300793,  0.95671225,  0.22629565]],</span>
+<span class="sd">        #        [[ 0.22629565, -0.18300793,  0.95671225],</span>
+<span class="sd">        #         [ 0.95671225,  0.22629565, -0.18300793],</span>
+<span class="sd">        #         [-0.18300793,  0.95671225,  0.22629565]]], dtype=float32)&gt;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        log_rot (tf.Tensor): Batch of 3D rotation vectors of shape</span>
+<span class="sd">            `(minibatch, 3)`.</span>
+<span class="sd">        eps (float): Threshold for the norm of the rotation vector.</span>
+<span class="sd">            If the norm is below this threshold, the exponential map</span>
+<span class="sd">            is approximated with the first order Taylor expansion.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Batch of rotation matrices of shape</span>
+<span class="sd">            `(minibatch, 3, 3)`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError if `log_rot` is of incorrect shape.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">R</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_so3_exp_map</span><span class="p">(</span><span class="n">log_rot</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">R</span></div>
+
+
+<div class="viewcode-block" id="so3_log_map"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.so3_ops.so3_log_map">[docs]</a><span class="k">def</span> <span class="nf">so3_log_map</span><span class="p">(</span>
+    <span class="n">R</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">cos_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Convert a batch of 3x3 rotation matrices `R` to a batch of 3-dimensional</span>
+<span class="sd">    matrix logarithms of rotation matrices The conversion has a singularity</span>
+<span class="sd">    around `(R=I)` which is handled by clamping controlled with the `eps` and</span>
+<span class="sd">    `cos_bound` arguments.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        R = tf.constant([[[1., 1., 1.],[1., 1., 1.],[1., 1., 1.]]])</span>
+<span class="sd">        so3_log_map(R)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(1, 3), dtype=float32, numpy=array([[0., 0., 0.]], dtype=float32)&gt;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        R: batch of rotation matrices of shape `(minibatch, 3, 3)`.</span>
+<span class="sd">        eps: A float constant handling the conversion singularity.</span>
+<span class="sd">        cos_bound: Clamps the cosine of the rotation angle to</span>
+<span class="sd">            [-1 + cos_bound, 1 - cos_bound] to avoid non-finite outputs/gradients</span>
+<span class="sd">            of the `acos` call when computing `so3_rotation_angle`.</span>
+<span class="sd">            Note that the non-finite outputs/gradients are returned when</span>
+<span class="sd">            the rotation angle is close to 0 or π.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Batch of logarithms of input rotation matrices</span>
+<span class="sd">        of shape `(minibatch, 3)`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError if `R` is of incorrect shape.</span>
+<span class="sd">        ValueError if `R` has an unexpected trace.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="n">dim1</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">dim2</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input has to be a batch of 3x3 Tensors.&quot;</span><span class="p">)</span>
+
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">so3_rotation_angle</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">cos_bound</span><span class="o">=</span><span class="n">cos_bound</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span>
+
+    <span class="n">phi_sin</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">phi_factor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">ok_denom</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">phi_sin</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">phi_factor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ok_denom</span><span class="p">,</span> <span class="n">phi</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">phi_sin</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="p">(</span><span class="n">phi</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">12</span><span class="p">))</span>
+
+    <span class="n">log_rot_hat</span> <span class="o">=</span> <span class="n">phi_factor</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">log_rot</span> <span class="o">=</span> <span class="n">hat_inverse</span><span class="p">(</span><span class="n">log_rot_hat</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">log_rot</span></div>
+
+
+<div class="viewcode-block" id="so3_relative_angle"><a class="viewcode-back" href="../../tensorflow3d_transforms.html#tensorflow3d_transforms.so3_ops.so3_relative_angle">[docs]</a><span class="k">def</span> <span class="nf">so3_relative_angle</span><span class="p">(</span>
+    <span class="n">R1</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">R2</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">cos_angle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">cos_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
+    <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the relative angle (in radians) between pairs of.</span>
+
+<span class="sd">    rotation matrices `R1` and `R2` with `angle = acos(0.5 * (Trace(R1 R2^T)-1))`</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        This corresponds to a geodesic distance on the 3D manifold of rotation</span>
+<span class="sd">        matrices.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        R = tf.constant([[[1., 1., 1.], [1., 1., 1.], [1., 1., 1.]]])</span>
+<span class="sd">        so3_relative_angle(R, R, eps=1e2)</span>
+<span class="sd">        # &lt;tf.Tensor: shape=(1,), dtype=float32, numpy=array([-212.13028], dtype=float32)&gt;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        R1: Batch of rotation matrices of shape `(minibatch, 3, 3)`.</span>
+<span class="sd">        R2: Batch of rotation matrices of shape `(minibatch, 3, 3)`.</span>
+<span class="sd">        cos_angle: If==True return cosine of the relative angle rather than</span>
+<span class="sd">            the angle itself. This can avoid the unstable calculation of `acos`.</span>
+<span class="sd">        cos_bound: Clamps the cosine of the relative rotation angle to</span>
+<span class="sd">            [-1 + cos_bound, 1 - cos_bound] to avoid non-finite outputs/gradients</span>
+<span class="sd">            of the `acos` call. Note that the non-finite outputs/gradients</span>
+<span class="sd">            are returned when the angle is requested (i.e. `cos_angle==False`)</span>
+<span class="sd">            and the rotation angle is close to 0 or π.</span>
+<span class="sd">        eps: Tolerance for the valid trace check of the relative rotation matrix</span>
+<span class="sd">            in `so3_rotation_angle`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Corresponding rotation angles of shape `(minibatch,)`.</span>
+<span class="sd">        If `cos_angle==True`, returns the cosine of the angles.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError if `R1` or `R2` is of incorrect shape.</span>
+<span class="sd">        ValueError if `R1` or `R2` has an unexpected trace.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">R12</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">so3_rotation_angle</span><span class="p">(</span><span class="n">R12</span><span class="p">,</span> <span class="n">cos_angle</span><span class="o">=</span><span class="n">cos_angle</span><span class="p">,</span> <span class="n">cos_bound</span><span class="o">=</span><span class="n">cos_bound</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
