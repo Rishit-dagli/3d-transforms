@@ -445,3 +445,55 @@ def so3_exp_map(log_rot: tf.Tensor, eps: float = 0.0001) -> tf.Tensor:
     return R
 
 
+def so3_log_map(
+    R: tf.Tensor, eps: float = 0.0001, cos_bound: float = 1e-4
+) -> tf.Tensor:
+    """Convert a batch of 3x3 rotation matrices `R` to a batch of 3-dimensional
+    matrix logarithms of rotation matrices The conversion has a singularity
+    around `(R=I)` which is handled by clamping controlled with the `eps` and
+    `cos_bound` arguments.
+
+    Example:
+
+    .. code-block:: python
+
+        R = tf.constant([[[1., 1., 1.],[1., 1., 1.],[1., 1., 1.]]])
+        so3_log_map(R)
+        # <tf.Tensor: shape=(1, 3), dtype=float32, numpy=array([[0., 0., 0.]], dtype=float32)>
+
+    Args:
+        R: batch of rotation matrices of shape `(minibatch, 3, 3)`.
+        eps: A float constant handling the conversion singularity.
+        cos_bound: Clamps the cosine of the rotation angle to
+            [-1 + cos_bound, 1 - cos_bound] to avoid non-finite outputs/gradients
+            of the `acos` call when computing `so3_rotation_angle`.
+            Note that the non-finite outputs/gradients are returned when
+            the rotation angle is close to 0 or π.
+
+    Returns:
+        Batch of logarithms of input rotation matrices
+        of shape `(minibatch, 3)`.
+
+    Raises:
+        ValueError if `R` is of incorrect shape.
+        ValueError if `R` has an unexpected trace.
+    """
+
+    _, dim1, dim2 = R.shape
+    if dim1 != 3 or dim2 != 3:
+        raise ValueError("Input has to be a batch of 3x3 Tensors.")
+
+    phi = so3_rotation_angle(R, cos_bound=cos_bound, eps=eps)
+
+    phi_sin = tf.math.sin(phi)
+    phi_factor = tf.zeros_like(phi)
+    ok_denom = tf.math.abs(phi_sin) > (0.5 * eps)
+    phi_factor = tf.where(ok_denom, phi / (2.0 * phi_sin), 0.5 + (phi ** 2) * (1.0 / 12))
+
+    log_rot_hat = phi_factor[:, tf.newaxis, tf.newaxis] * (R - tf.transpose(R, [0, 2, 1]))
+
+    log_rot = hat_inverse(log_rot_hat)
+
+    return log_rot
+
+
