@@ -334,3 +334,78 @@ def hat_inverse(h: tf.Tensor) -> tf.Tensor:
     v = tf.stack((x, y, z), axis=1)
 
     return v
+
+
+def _so3_exp_map(
+    log_rot: tf.Tensor, eps: float = 0.0001
+) -> Tuple[tf.Tensor, tf.Tensor, tf.Tensor, tf.Tensor]:
+    """Computes the exponential map of a batch of 3D rotation vectors and
+    returns the intermediate tensors as well.
+
+    Example:
+
+    .. code-block:: python
+
+    log_rot = tf.constant(((1.,1.,1.),(1.,1.,1.)))
+    _so3_exp_map(log_rot)
+    # (<tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=
+    #  array([[[ 0.22629565, -0.18300793,  0.95671225],
+    #          [ 0.95671225,  0.22629565, -0.18300793],
+    #          [-0.18300793,  0.95671225,  0.22629565]],
+    #         [[ 0.22629565, -0.18300793,  0.95671225],
+    #          [ 0.95671225,  0.22629565, -0.18300793],
+    #          [-0.18300793,  0.95671225,  0.22629565]]], dtype=float32)>,
+    # 
+    #  <tf.Tensor: shape=(2,), dtype=float32, numpy=array([1.7320508, 1.7320508], dtype=float32)>,
+    # 
+    #  <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=
+    #  array([[[ 0., -1.,  1.],
+    #          [ 1.,  0., -1.],
+    #          [-1.,  1.,  0.]],
+    #         [[ 0., -1.,  1.],
+    #          [ 1.,  0., -1.],
+    #          [-1.,  1.,  0.]]], dtype=float32)>,
+    # 
+    #  <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=
+    #  array([[[-2.,  1.,  1.],
+    #          [ 1., -2.,  1.],
+    #          [ 1.,  1., -2.]],
+    #         [[-2.,  1.,  1.],
+    #          [ 1., -2.,  1.],
+    #          [ 1.,  1., -2.]]], dtype=float32)>)
+
+    Args:
+        log_rot (tf.Tensor): Batch of 3D rotation vectors of shape
+            `(minibatch, 3)`.
+        eps (float): Threshold for the norm of the rotation vector.
+            If the norm is below this threshold, the exponential map
+            is approximated with the first order Taylor expansion.
+
+    Returns:
+        Tuple of tf.Tensor: Batch of rotation matrices of shape
+            `(minibatch, 3, 3)`, batch of rotation angles of shape
+            `(minibatch,)`, batch of rotation vectors of shape
+            `(minibatch, 3)`, batch of rotation vector norms of shape
+            `(minibatch,)`.
+
+    Raises:
+        ValueError if `log_rot` is of incorrect shape.
+    """
+    _, dim = tf.shape(log_rot)
+    if dim != 3:
+        raise ValueError("Input tensor shape has to be Nx3.")
+
+    nrms = tf.reduce_sum(log_rot * log_rot, axis=1)
+    rot_angles = tf.clip_by_value(nrms, eps, tf.math.reduce_max(nrms))**0.5
+    rot_angles_inv = 1.0 / rot_angles
+    fac1 = rot_angles_inv * tf.math.sin(rot_angles)
+    fac2 = rot_angles_inv * rot_angles_inv * (1.0 - tf.math.cos(rot_angles))
+    skews = hat(log_rot)
+    skews_square = tf.matmul(skews, skews)
+
+    eye_3 = tf.eye(3, dtype=log_rot.dtype)
+    R = fac1[:, tf.newaxis, tf.newaxis] * skews + fac2[:, tf.newaxis, tf.newaxis] * skews_square + tf.tile(tf.expand_dims(eye_3, 0), [tf.shape(log_rot)[0], 1, 1])
+
+    return R, rot_angles, skews, skews_square
+
+
