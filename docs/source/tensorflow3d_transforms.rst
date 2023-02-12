@@ -1,4 +1,4 @@
-tensorflow3d\_transforms package
+API Reference
 ================================
 
 Submodules
@@ -16,6 +16,14 @@ tensorflow3d\_transforms.so3\_ops module
 ----------------------------------------
 
 .. automodule:: tensorflow3d_transforms.so3_ops
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tensorflow3d\_transforms.version module
+----------------------------------------
+
+.. automodule:: tensorflow3d_transforms.version
    :members:
    :undoc-members:
    :show-inheritance:
