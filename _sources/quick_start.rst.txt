@@ -3,6 +3,8 @@ Quickstart
 
 1. Install TensorFlow3d Transforms:
 
+.. code-block:: bash
+
     pip install tensorflow3dtransforms
 
 2. Try out any of the method examples in the documentation. Here are a few starter example you could try out:
