@@ -213,8 +213,8 @@
 <span class="sd">        tf.Tensor: Corresponding rotation angles of shape `(minibatch,)`.</span>
 <span class="sd">        If `cos_angle==True`, returns the cosine of the angles.</span>
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError if `R` is of incorrect shape.</span>
-<span class="sd">        ValueError if `R` has an unexpected trace.</span>
+<span class="sd">        ValueError: if ``R`` is of incorrect shape.</span>
+<span class="sd">        ValueError: if ``R`` has an unexpected trace.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span>
     <span class="k">if</span> <span class="n">dim1</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">dim2</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
@@ -265,7 +265,7 @@
 <span class="sd">             [  v_z     0  -v_x ]</span>
 <span class="sd">             [ -v_y   v_x     0 ]`</span>
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError if `v` is of incorrect shape.</span>
+<span class="sd">        ValueError: if ``v`` is of incorrect shape.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">N</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span>
     <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
@@ -311,8 +311,8 @@
 <span class="sd">        Batch of 3D vectors of shape `(minibatch, 3)` where each vector is of the form:</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError if `h` is of incorrect shape.</span>
-<span class="sd">        ValueError if `h` is not skew-symmetric.</span>
+<span class="sd">        ValueError: if ``h`` is of incorrect shape.</span>
+<span class="sd">        ValueError: if ``h`` is not skew-symmetric.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">N</span><span class="p">,</span> <span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">shape</span>
     <span class="k">if</span> <span class="n">dim1</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">dim2</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
@@ -386,7 +386,7 @@
 <span class="sd">            `(minibatch,)`.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError if `log_rot` is of incorrect shape.</span>
+<span class="sd">        ValueError: if ``log_rot`` is of incorrect shape.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">log_rot</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
@@ -439,7 +439,7 @@
 <span class="sd">            `(minibatch, 3, 3)`.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError if `log_rot` is of incorrect shape.</span>
+<span class="sd">        ValueError: if ``log_rot`` is of incorrect shape.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">R</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_so3_exp_map</span><span class="p">(</span><span class="n">log_rot</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
 
@@ -476,8 +476,8 @@
 <span class="sd">        of shape `(minibatch, 3)`.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError if `R` is of incorrect shape.</span>
-<span class="sd">        ValueError if `R` has an unexpected trace.</span>
+<span class="sd">        ValueError: if ``R`` is of incorrect shape.</span>
+<span class="sd">        ValueError: if ``R`` has an unexpected trace.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_</span><span class="p">,</span> <span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span>
@@ -543,8 +543,8 @@
 <span class="sd">        If `cos_angle==True`, returns the cosine of the angles.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError if `R1` or `R2` is of incorrect shape.</span>
-<span class="sd">        ValueError if `R1` or `R2` has an unexpected trace.</span>
+<span class="sd">        ValueError: if ``R1`` or ``R2`` is of incorrect shape.</span>
+<span class="sd">        ValueError: if ``R1`` or ``R2`` has an unexpected trace.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">R12</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">so3_rotation_angle</span><span class="p">(</span><span class="n">R12</span><span class="p">,</span> <span class="n">cos_angle</span><span class="o">=</span><span class="n">cos_angle</span><span class="p">,</span> <span class="n">cos_bound</span><span class="o">=</span><span class="n">cos_bound</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span></div>
