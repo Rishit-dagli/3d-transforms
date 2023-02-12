@@ -1,5 +1,3 @@
-from .version import __version__
-
 from .rotation_conversions import (
     axis_angle_to_matrix,
     axis_angle_to_quaternion,
@@ -28,5 +26,6 @@ from .so3_ops import (
     so3_relative_angle,
     so3_rotation_angle,
 )
+from .version import __version__
 
 __all__ = [k for k in globals().keys() if not k.startswith("_")]
