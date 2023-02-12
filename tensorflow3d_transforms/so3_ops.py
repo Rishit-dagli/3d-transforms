@@ -409,3 +409,39 @@ def _so3_exp_map(
     return R, rot_angles, skews, skews_square
 
 
+def so3_exp_map(log_rot: tf.Tensor, eps: float = 0.0001) -> tf.Tensor:
+    """Computes the exponential map of a batch of 3D rotation vectors.
+
+    Example:
+
+    .. code-block:: python
+
+        log_rot = tf.constant(((1.,1.,1.),(1.,1.,1.)))
+        so3_exp_map(log_rot)
+        # <tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=
+        # array([[[ 0.22629565, -0.18300793,  0.95671225],
+        #         [ 0.95671225,  0.22629565, -0.18300793],
+        #         [-0.18300793,  0.95671225,  0.22629565]],
+        #        [[ 0.22629565, -0.18300793,  0.95671225],
+        #         [ 0.95671225,  0.22629565, -0.18300793],
+        #         [-0.18300793,  0.95671225,  0.22629565]]], dtype=float32)>
+
+    Args:
+        log_rot (tf.Tensor): Batch of 3D rotation vectors of shape
+            `(minibatch, 3)`.
+        eps (float): Threshold for the norm of the rotation vector.
+            If the norm is below this threshold, the exponential map
+            is approximated with the first order Taylor expansion.
+
+    Returns:
+        tf.Tensor: Batch of rotation matrices of shape
+            `(minibatch, 3, 3)`.
+
+    Raises:
+        ValueError if `log_rot` is of incorrect shape.
+    """
+    R, _, _, _ = _so3_exp_map(log_rot, eps)
+
+    return R
+
+
