@@ -17,5 +17,14 @@ from .rotation_conversions import (
     rotation_6d_to_matrix,
     standardize_quaternion,
 )
+from .so3_ops import (
+    acos_linear_extrapolation,
+    hat,
+    hat_inverse,
+    so3_exp_map,
+    so3_log_map,
+    so3_relative_angle,
+    so3_rotation_angle,
+)
 
 __all__ = [k for k in globals().keys() if not k.startswith("_")]

@@ -98,7 +98,7 @@ def _dacos_dx(x: float) -> float:
     `x`.
     """
     return (-1.0) / math.sqrt(1.0 - x * x)
-    
+
 
 def so3_rotation_angle(
     R: tf.Tensor,
