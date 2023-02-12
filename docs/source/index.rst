@@ -34,6 +34,7 @@ Quick Links
    :caption: Contents:
 
    tensorflow3d_transforms
+   quick_start
 
 Indices and tables
 ==================
