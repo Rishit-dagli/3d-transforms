@@ -33,8 +33,8 @@ Quick Links
    :maxdepth: 2
    :caption: Contents:
 
-   tensorflow3d_transforms
    quick_start
+   tensorflow3d_transforms
 
 Indices and tables
 ==================
