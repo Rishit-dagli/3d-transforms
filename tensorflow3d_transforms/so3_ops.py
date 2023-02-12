@@ -108,7 +108,7 @@ def so3_rotation_angle(
 ) -> tf.Tensor:
     """Calculates angles (in radians) of a batch of rotation matrices `R` with.
 
-    `angle = acos(0.5 * (Trace(R)-1))`. The trace of the
+    :math:`angle = acos(0.5 * (Trace(R)-1))`. The trace of the
     input matrices is checked to be in the valid range `[-1-eps,3+eps]`.
     The `eps` argument is a small constant that allows for small errors
     caused by limited machine precision.
