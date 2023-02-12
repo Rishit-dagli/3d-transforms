@@ -50,13 +50,11 @@ jobs:
         docs-folder: docs/
 
     - uses: actions/upload-artifact@v2
-      if: "contains(github.event.head_commit.message, 'save artifact')"
       with:
         name: DocumentationHTML
         path: docs/build/html/
 
     - uses: actions/upload-artifact@v2
-      if: "contains(github.event.head_commit.message, 'save artifact')"
       with:
         name: Documentation
         path: docs/build/latex/tensorflow3d-transforms.pdf
