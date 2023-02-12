@@ -136,8 +136,8 @@ def so3_rotation_angle(
         tf.Tensor: Corresponding rotation angles of shape `(minibatch,)`.
         If `cos_angle==True`, returns the cosine of the angles.
     Raises:
-        ValueError if `R` is of incorrect shape.
-        ValueError if `R` has an unexpected trace.
+        ValueError: if ``R`` is of incorrect shape.
+        ValueError: if ``R`` has an unexpected trace.
     """
     _, dim1, dim2 = R.shape
     if dim1 != 3 or dim2 != 3:
@@ -188,7 +188,7 @@ def hat(v: tf.Tensor) -> tf.Tensor:
              [  v_z     0  -v_x ]
              [ -v_y   v_x     0 ]`
     Raises:
-        ValueError if `v` is of incorrect shape.
+        ValueError: if ``v`` is of incorrect shape.
     """
     N, dim = v.shape
     if dim != 3:
@@ -234,8 +234,8 @@ def hat_inverse(h: tf.Tensor) -> tf.Tensor:
         Batch of 3D vectors of shape `(minibatch, 3)` where each vector is of the form:
 
     Raises:
-        ValueError if `h` is of incorrect shape.
-        ValueError if `h` is not skew-symmetric.
+        ValueError: if ``h`` is of incorrect shape.
+        ValueError: if ``h`` is not skew-symmetric.
     """
     N, dim1, dim2 = h.shape
     if dim1 != 3 or dim2 != 3:
@@ -309,7 +309,7 @@ def _so3_exp_map(
             `(minibatch,)`.
 
     Raises:
-        ValueError if `log_rot` is of incorrect shape.
+        ValueError: if ``log_rot`` is of incorrect shape.
     """
     _, dim = tf.shape(log_rot)
     if dim != 3:
@@ -362,7 +362,7 @@ def so3_exp_map(log_rot: tf.Tensor, eps: float = 0.0001) -> tf.Tensor:
             `(minibatch, 3, 3)`.
 
     Raises:
-        ValueError if `log_rot` is of incorrect shape.
+        ValueError: if ``log_rot`` is of incorrect shape.
     """
     R, _, _, _ = _so3_exp_map(log_rot, eps)
 
@@ -399,8 +399,8 @@ def so3_log_map(
         of shape `(minibatch, 3)`.
 
     Raises:
-        ValueError if `R` is of incorrect shape.
-        ValueError if `R` has an unexpected trace.
+        ValueError: if ``R`` is of incorrect shape.
+        ValueError: if ``R`` has an unexpected trace.
     """
 
     _, dim1, dim2 = R.shape
@@ -466,8 +466,8 @@ def so3_relative_angle(
         If `cos_angle==True`, returns the cosine of the angles.
 
     Raises:
-        ValueError if `R1` or `R2` is of incorrect shape.
-        ValueError if `R1` or `R2` has an unexpected trace.
+        ValueError: if ``R1`` or ``R2`` is of incorrect shape.
+        ValueError: if ``R1`` or ``R2`` has an unexpected trace.
     """
     R12 = tf.matmul(R1, tf.transpose(R2, [0, 2, 1]))
     return so3_rotation_angle(R12, cos_angle=cos_angle, cos_bound=cos_bound, eps=eps)
