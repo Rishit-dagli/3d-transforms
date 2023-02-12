@@ -41,6 +41,7 @@ extensions = [
     "sphinxemoji.sphinxemoji",
     "nbsphinx",
     "sphinx.ext.napoleon",
+    "sphinx.ext.mathjax",
 ]
 
 # user starts in light mode
