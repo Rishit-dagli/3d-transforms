@@ -15,7 +15,7 @@ A rotation matrix :math:`R` in 3D space can be parameterized using logarithmic m
 
 .. math::
 
-    R = e^{theta} = I + \frac{\sin(\left|theta\right|)}{\left|theta\right|}theta + \frac{1-\cos(\left|theta\right|)}{\left|theta\right|^2}theta^2
+    R = e^{\theta} = I + \frac{\sin(\left|\theta\right|)}{\left|\theta\right|}\theta + \frac{1-\cos(\left|\theta\right|)}{\left|\theta\right|^2}\theta^2
 
 where :math:`I` is the identity matrix.
 
