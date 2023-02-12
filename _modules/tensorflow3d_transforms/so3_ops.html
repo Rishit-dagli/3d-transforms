@@ -430,9 +430,9 @@
 <span class="sd">    #         [[ 0.22629565, -0.18300793,  0.95671225],</span>
 <span class="sd">    #          [ 0.95671225,  0.22629565, -0.18300793],</span>
 <span class="sd">    #          [-0.18300793,  0.95671225,  0.22629565]]], dtype=float32)&gt;,</span>
-<span class="sd">    # </span>
+<span class="sd">    #</span>
 <span class="sd">    #  &lt;tf.Tensor: shape=(2,), dtype=float32, numpy=array([1.7320508, 1.7320508], dtype=float32)&gt;,</span>
-<span class="sd">    # </span>
+<span class="sd">    #</span>
 <span class="sd">    #  &lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=</span>
 <span class="sd">    #  array([[[ 0., -1.,  1.],</span>
 <span class="sd">    #          [ 1.,  0., -1.],</span>
@@ -440,7 +440,7 @@
 <span class="sd">    #         [[ 0., -1.,  1.],</span>
 <span class="sd">    #          [ 1.,  0., -1.],</span>
 <span class="sd">    #          [-1.,  1.,  0.]]], dtype=float32)&gt;,</span>
-<span class="sd">    # </span>
+<span class="sd">    #</span>
 <span class="sd">    #  &lt;tf.Tensor: shape=(2, 3, 3), dtype=float32, numpy=</span>
 <span class="sd">    #  array([[[-2.,  1.,  1.],</span>
 <span class="sd">    #          [ 1., -2.,  1.],</span>
@@ -471,7 +471,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input tensor shape has to be Nx3.&quot;</span><span class="p">)</span>
 
     <span class="n">nrms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">log_rot</span> <span class="o">*</span> <span class="n">log_rot</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">rot_angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">nrms</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">nrms</span><span class="p">))</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="n">rot_angles</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">nrms</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">nrms</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
     <span class="n">rot_angles_inv</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">rot_angles</span>
     <span class="n">fac1</span> <span class="o">=</span> <span class="n">rot_angles_inv</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rot_angles</span><span class="p">)</span>
     <span class="n">fac2</span> <span class="o">=</span> <span class="n">rot_angles_inv</span> <span class="o">*</span> <span class="n">rot_angles_inv</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rot_angles</span><span class="p">))</span>
@@ -479,7 +479,11 @@
     <span class="n">skews_square</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">skews</span><span class="p">,</span> <span class="n">skews</span><span class="p">)</span>
 
     <span class="n">eye_3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">log_rot</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">fac1</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">skews</span> <span class="o">+</span> <span class="n">fac2</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">skews_square</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">eye_3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">log_rot</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">fac1</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">skews</span>
+        <span class="o">+</span> <span class="n">fac2</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">skews_square</span>
+        <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">eye_3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">log_rot</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">R</span><span class="p">,</span> <span class="n">rot_angles</span><span class="p">,</span> <span class="n">skews</span><span class="p">,</span> <span class="n">skews_square</span>
 
@@ -563,9 +567,13 @@
     <span class="n">phi_sin</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
     <span class="n">phi_factor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
     <span class="n">ok_denom</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">phi_sin</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
-    <span class="n">phi_factor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ok_denom</span><span class="p">,</span> <span class="n">phi</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">phi_sin</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="p">(</span><span class="n">phi</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="n">phi_factor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">ok_denom</span><span class="p">,</span> <span class="n">phi</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">phi_sin</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="p">(</span><span class="n">phi</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">12</span><span class="p">)</span>
+    <span class="p">)</span>
 
-    <span class="n">log_rot_hat</span> <span class="o">=</span> <span class="n">phi_factor</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">log_rot_hat</span> <span class="o">=</span> <span class="n">phi_factor</span><span class="p">[:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">R</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="p">)</span>
 
     <span class="n">log_rot</span> <span class="o">=</span> <span class="n">hat_inverse</span><span class="p">(</span><span class="n">log_rot_hat</span><span class="p">)</span>
 
