@@ -1,3 +1,14 @@
+"""The SO(3) group, also known as the special orthogonal group in three
+dimensions, is a mathematical group that consists of all rotations in three-
+dimensional space.
+
+It's the collection of rotations of three-dimensional space that preserve one
+distinguished point, the origin. It is important in 3D geometry because it
+represents the set of all possible rotations that can be performed in three-
+dimensional space and operations on it are pretty helpful; thus the existence
+of this module.
+"""
+
 import math
 from typing import Tuple
 
