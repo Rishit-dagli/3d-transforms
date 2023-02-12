@@ -358,8 +358,7 @@ def so3_exp_map(log_rot: tf.Tensor, eps: float = 0.0001) -> tf.Tensor:
             is approximated with the first order Taylor expansion.
 
     Returns:
-        tf.Tensor: Batch of rotation matrices of shape
-            `(minibatch, 3, 3)`.
+        tf.Tensor: Batch of rotation matrices of shape ``(minibatch, 3, 3)``.
 
     Raises:
         ValueError: if ``log_rot`` is of incorrect shape.
