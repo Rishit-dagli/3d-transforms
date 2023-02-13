@@ -19,7 +19,7 @@ TensorFlow3d Transforms is designed to integrate smoothly with deep learning met
 - Can be differentiated
 - Can utilize GPUs for acceleration
 
-![](cube.gif) ![](camera_estimate.gif)
+![](media/cube.gif) ![](media/camera_estimate.gif)
 
 This project also draws much inspiration from [PyTorch3D](https://github.com/facebookresearch/pytorch3d).
 
