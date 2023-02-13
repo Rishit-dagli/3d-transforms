@@ -2,7 +2,7 @@
 |:-------------------------:|:------------------------:|
 | <img src="media/cube.gif" height="250"/> | <img src="media/camera_estimate.gif" height="250"/> |
 
-# 3d Transforms [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FRishit-dagli%2F3d-transforms)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FRishit-dagli%2F3d-transforms)
+# 3D Transforms [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FRishit-dagli%2F3d-transforms)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FRishit-dagli%2F3d-transforms)
 
 [![PyPI](https://img.shields.io/pypi/v/tensorflow3dtransforms)](https://pypi.org/project/tensorflow3dtransforms/)
 [![Upload Python Package](https://github.com/Rishit-dagli/3d-transforms/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Rishit-dagli/3d-transforms/actions/workflows/python-publish.yml)
@@ -14,9 +14,9 @@
 [![GitHub followers](https://img.shields.io/github/followers/Rishit-dagli?label=Follow&style=social)](https://github.com/Rishit-dagli)
 [![Twitter Follow](https://img.shields.io/twitter/follow/rishit_dagli?style=social)](https://twitter.com/intent/follow?screen_name=rishit_dagli)
 
-TensorFlow3d Transforms is a library to easily make 3D transformations and work with 3D data. This library originally started as a few functions here and there for my own work which I then turned into a library.
+TensorFlow3D Transforms is a library to easily make 3D transformations and work with 3D data. This library originally started as a few functions here and there for my own work which I then turned into a library.
 
-TensorFlow3d Transforms is designed to integrate smoothly with deep learning methods for predicting and manipulating 3D data. For this reason, all operators in TensorFlow3d Transforms:
+TensorFlow3D Transforms is designed to integrate smoothly with deep learning methods for predicting and manipulating 3D data. For this reason, all operators in TensorFlow3D Transforms:
 
 - Are implemented using TensorFlow tensors
 - Can handle minibatches of hetereogenous data
