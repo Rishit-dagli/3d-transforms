@@ -1,3 +1,7 @@
+| | |
+|:-------------------------:|:------------------------:|
+| <img src="media/cube.gif" height="250"/> | <img src="media/camera_estimate.gif" height="250"/> |
+
 # 3d Transforms [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FRishit-dagli%2F3d-transforms)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FRishit-dagli%2F3d-transforms)
 
 [![PyPI](https://img.shields.io/pypi/v/tensorflow3dtransforms)](https://pypi.org/project/tensorflow3dtransforms/)
@@ -18,8 +22,6 @@ TensorFlow3d Transforms is designed to integrate smoothly with deep learning met
 - Can handle minibatches of hetereogenous data
 - Can be differentiated
 - Can utilize GPUs for acceleration
-
-![](media/cube.gif) ![](media/camera_estimate.gif)
 
 This project also draws much inspiration from [PyTorch3D](https://github.com/facebookresearch/pytorch3d).
 
