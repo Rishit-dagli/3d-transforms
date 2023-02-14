@@ -45,6 +45,10 @@ pip install tensorflow3dtransforms
 
 Awesome! If you want to contribute to this project, you're always welcome! See [Contributing Guidelines](CONTRIBUTING.md). You can also take a look at [TensorFlow3d Transforms's Project Status Tracker](https://github.com/users/Rishit-dagli/projects/10) for getting more information about current or upcoming tasks.
 
+## Acknowledgements
+
+Most of the experiments and reimplementations with this library were done on Civo Cloud Kubernetes Clusters using the [Civo Developer Demo program](https://www.civo.com/demo-program)
+
 ## License
 
 ```
