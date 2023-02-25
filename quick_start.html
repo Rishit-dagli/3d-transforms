@@ -121,7 +121,7 @@
 \[\theta = \text{logmap}(R) = \frac{A}{\sin(\left|A\right|)}\text{tan}^{-1}\left(\frac{\text{trace}(R)-1}{2}\right)\]</div>
 <p>where <span class="math notranslate nohighlight">\(A = \left[R_{32}-R_{23}, R_{13}-R_{31}, R_{21}-R_{12}\right]^T\)</span></p>
 <p>The code examples below shows this in action with the TensorFlow3d Transforms library on 10,000 points.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow3dtransforms</span> <span class="k">as</span> <span class="nn">t3d</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow3d_transforms</span> <span class="k">as</span> <span class="nn">t3d</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -151,7 +151,7 @@
 \end{bmatrix}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(u_x\)</span>, <span class="math notranslate nohighlight">\(u_y\)</span>, <span class="math notranslate nohighlight">\(u_z\)</span> are the components of the unit vector axis and <span class="math notranslate nohighlight">\(\theta\)</span> is the angle of rotation.</p>
 <p>The code examples below shows this in action with the TensorFlow3d Transforms library.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow3dtransforms</span> <span class="k">as</span> <span class="nn">t3d</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow3d_transforms</span> <span class="k">as</span> <span class="nn">t3d</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
@@ -189,7 +189,7 @@
 <ol class="arabic simple" start="3">
 <li><p>Here’s an example of visualizing a 3D rotation map as a heatmap.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow3dtransforms</span> <span class="k">as</span> <span class="nn">t3d</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow3d_transforms</span> <span class="k">as</span> <span class="nn">t3d</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 

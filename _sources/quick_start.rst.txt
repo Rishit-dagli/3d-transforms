@@ -31,7 +31,7 @@ The code examples below shows this in action with the TensorFlow3d Transforms li
 
 .. code-block:: python
 
-    import tensorflow3dtransforms as t3d
+    import tensorflow3d_transforms as t3d
     import tensorflow as tf
     import numpy as np
     import matplotlib.pyplot as plt
@@ -67,7 +67,7 @@ The code examples below shows this in action with the TensorFlow3d Transforms li
 
 .. code-block:: python
 
-    import tensorflow3dtransforms as t3d
+    import tensorflow3d_transforms as t3d
     import numpy as np
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
@@ -106,7 +106,7 @@ The code examples below shows this in action with the TensorFlow3d Transforms li
 
 .. code-block:: python
 
-    import tensorflow3dtransforms as t3d
+    import tensorflow3d_transforms as t3d
     import numpy as np
     import matplotlib.pyplot as plt
 
